@@ -8,6 +8,11 @@ const style = StyleSheet.create({
     },
     text:{
         color:'black'
+    },
+    button:{
+        alignSelf: 'flex-start', 
+        width: 100, 
+        marginTop: 10, 
     }
 })
 export default style;

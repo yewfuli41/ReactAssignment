@@ -1,67 +1,30 @@
-import React,{useState,useEffect} from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { useSharedValue, withSpring, runOnJS } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import React from "react";
+import{View,Text,Button} from 'react-native';
+import SwipeableScreen from "./SwipeNavigation";
 import styles from "./styleSheet";
-// Define the type for your navigation stack
-type RootStackParamList = {
-    HomeScreen: undefined;
-    ServiceScreen: undefined;
-    BookHistoryScreen: undefined;
-    ProfileScreen: undefined;
-  };
-  const screens = ["Home", "Service", "Booking History", "Profile"];
-const HomeScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const translateX = useSharedValue(0);
-  const [currentIndex, setCurrentIndex] = useState(1);
-  const handleSwipe = (direction: "left" | "right") => {
-    let newIndex = currentIndex;
-    if (direction === "left"&& currentIndex < screens.length - 1) {
-        newIndex += 1; // Move forward
-    } else if (direction === "right"&& currentIndex > 0) {
-        newIndex -= 1; // Move backward
-    }
-    if (newIndex !== currentIndex) {
-        setCurrentIndex(newIndex);
-        navigation.navigate(screens[newIndex] as keyof RootStackParamList);
-      }
-  };
+import type { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../Types'; 
+import BookingDetails  from './BookingDetails'
+type Props = StackScreenProps<RootStackParamList, 'BookingHome'>;
+const buttons=[ { title: "Dental Consultation",description:"some description", target: 'BookingDetails' },
+    { title: "Scaling", description:"some description",target: 'BookingDetails' },
+    { title: "X-Ray", description:"some description",target: 'BookingDetails' },]
+const ServiceScreen = ({navigation}: Props) => 
+(<View style={styles.container}>
+    <Text style={[styles.text,{fontWeight:'bold'}]}>Services</Text>
+    {buttons.map((button,index) =>(
+    <View key={index}>
+        <Text>{button.title}</Text>
+        <Text>{button.description}</Text>
+        <Button
+            color='#FF8F00'
+            title="Book Now"
+            onPress={() => 
+                navigation.navigate(button.target as "BookingDetails")
+            }
+        />
+    </View>))}
+  </View>
+);
 
-// Sync currentIndex with navigation state
-useEffect(() => {
-  const unsubscribe = navigation.addListener("state", () => {
-    const routeName = navigation.getState().routes[navigation.getState().index].name;
-    const index = screens.indexOf(routeName);
-    if (index !== -1) {
-      setCurrentIndex(index);
-    }
-  });
-  return unsubscribe;
-}, [navigation]);
-
-  const swipeGesture = Gesture.Pan()
-    .minDistance(10) // Ignore tiny movements
-    .onFinalize((event) => {
-      if (event.translationX < -30) {
-        runOnJS(handleSwipe)("left");
-      } else if (event.translationX > 30) {
-        runOnJS(handleSwipe)("right");
-      }
-      translateX.value = withSpring(0);
-    });
-
-  return (
-    <GestureDetector gesture={swipeGesture}>
-      <Animated.View style={[styles.container, { flex: 1 }]}>
-        <Text style={styles.text}>Service</Text>
-      </Animated.View>
-    </GestureDetector>
-  );
-};
-
-
-
-export default HomeScreen;
+export default ServiceScreen;

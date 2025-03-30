@@ -7,18 +7,36 @@
 
 import React from 'react';
 import { Button, Text, View } from 'react-native';
+import SwipeableScreen from './screens/SwipeNavigation';
 import { NavigationContainer } from '@react-navigation/native';
+import{createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import SwipeNavigator from "./screens/SwipeNavigation";
-import HomeScreen from './screens/HomeScreen';
+import {HomeScreen} from './screens/HomeScreen';
 import ServiceScreen from './screens/ServiceScreen';
-import BookHistoryScreen from './screens/BookHistoryScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import {BookHistoryScreen} from './screens/BookHistoryScreen';
+import {ProfileScreen} from './screens/ProfileScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {LogBox} from 'react-native';
 LogBox.ignoreLogs (['EventEmitter.removeListener']);
+import { RootStackParamList } from './Types';
+import BookingDetails from './screens/BookingDetails';
+import BookingConfirm from './screens/BookingConfirm';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 const Tab = createBottomTabNavigator ();
+const Stack = createStackNavigator<RootStackParamList>();
+function ServiceStack() {
+    return (
+      <SwipeableScreen
+      screenIndex={1} // Index for the "Service" tab
+      renderContent={() => (
+        <Stack.Navigator initialRouteName="BookingHome"  screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="BookingHome" component={ServiceScreen}/>
+          <Stack.Screen name="BookingDetails" component={BookingDetails}/>
+          <Stack.Screen name="BookingConfirm" component={BookingConfirm}/>
+        </Stack.Navigator>)}
+      />
+    );
+  }
 const App = () =>{
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -51,7 +69,7 @@ const App = () =>{
         />
         <Tab.Screen
           name="Service"
-          component={ServiceScreen}
+          component={ServiceStack}
           options={{
             headerShown:false,
             tabBarIcon: () => {
