@@ -1,18 +1,141 @@
-import React from 'react';
-import { View, Text, Button} from 'react-native';
+import React,{useState,useEffect} from 'react';
+import { View, Text, Button,Alert,Platform} from 'react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types'; 
 import styles from "./styleSheet";
+import { RadioButton } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
 type Props = StackScreenProps<RootStackParamList, 'BookingDetails'>;
 
 const App = ( { route, navigation}: Props ) => {
+    const options = [
+        { id:1,name: "Dr Lee Wei" ,description:"some description"},
+        { id:2,name: "Dr Micheal Thompson" ,description:"some description"},
+        { id:3,name: "Dr Muhammad Faizal Ismail",description:"some description" },
+      ];
+    const [dentist, setDentist] = useState<string>("");
+    const [currentStep, setCurrentStep] = useState<"selectDentist" | "selectDateTime">("selectDentist");
+    const [date, setDate] = useState<Date>(new Date());
+    const [showPicker, setShowPicker] = useState<boolean>(false);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
+    const serviceName = route.params?.serviceName || "Unknown Service";
+    const timeSlots=[
+        {id:1,startTime:"1:30 PM",endTime:"3:00 PM"},
+        {id:2,startTime:"3:30 PM",endTime:"5:00 PM"},
+        {id:3,startTime:"5:30 PM",endTime:"7:00 PM"}
+    ]
+    const handleDateChange = (event: any, selectedDate?: Date) => {
+        setShowPicker(false); 
+        if (selectedDate) {
+          const today = new Date();
+          if (selectedDate < today) {
+            Alert.alert("Invalid Date", "You cannot select a date before today.");
+            setDate(today); 
+          } else {
+            setDate(selectedDate); 
+          }
+        }
+      };
     return (
-        <View style={styles.container}>
-            <Text>First Screen</Text>
-            <View style={styles.button}>
-            <Button title="Back" onPress={()=>navigation.goBack()}></Button>
+        <>
+        {currentStep === "selectDentist" &&(
+        <View>
+        <RadioButton.Group onValueChange={(value) => setDentist(value)} value={dentist}>
+        {options.map((option) => (
+          <View key={option.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10 }}>
+            <View style={{flexDirection:"column"}}>
+            <Text>{option.name}</Text>
+            <Text>{option.description}</Text>
             </View>
+            <RadioButton value={option.name} />
+          </View>
+        ))}
+      </RadioButton.Group>
+      <View style={styles.buttonRow}>
+        <View style={styles.backButton} >
+            <Button title="Back" onPress={()=>navigation.goBack()}/>
         </View>
+        <View style = {styles.nextButton}>
+            <Button 
+                title="Next" 
+                onPress={()=>{
+                    if(dentist){
+                        setCurrentStep("selectDateTime");
+                    }else{
+                        Alert.alert("Please select a dentist first.");
+                    }
+                }}
+                />
+        </View>
+        </View>
+        </View>)}
+        {currentStep === "selectDateTime" && (
+        <>
+          <Text style={styles.title}>Choose Date and Time</Text>
+          <View>
+            <Text style={styles.text}>Date: {date.toLocaleDateString("en-CA")}</Text>
+            <View style={[styles.nextButton,{alignSelf:'center'}]}>
+            <Button
+              title="Pick Date"
+              onPress={() => {setShowPicker(true);}}
+              color="#FF8F00"
+            />
+            </View>
+          </View>
+          {showPicker &&(
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={handleDateChange}
+              minimumDate={new Date()}
+            />
+          )}
+          <Text style={styles.title}>Time Slots:</Text>
+           <RadioButton.Group onValueChange={(value) => setSelectedTimeSlot(value)} value={selectedTimeSlot}>
+        {timeSlots.map((option) => (
+          <View key={option.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10 }}>
+            <View style={{flexDirection:"column"}}>
+            <Text>{option.startTime}-{option.endTime}</Text>
+            </View>
+            <RadioButton value={`${option.startTime}-${option.endTime}` }/>
+          </View>
+        ))}
+      </RadioButton.Group>
+      <View style={styles.buttonRow}>
+        <View style={[styles.backButton]}>
+            <Button
+              title="Back"
+              onPress={() =>
+                setCurrentStep("selectDentist")
+              }
+            />
+          </View>
+          <View style={[styles.nextButton]}>
+            <Button
+              title="Next"
+              onPress={() =>{
+                if(date&&selectedTimeSlot){
+                navigation.navigate("BookingConfirm", {
+                  serviceName: serviceName,
+                  dentistName: dentist,
+                  appointmentDate: date.toISOString(),
+                  timeSlot:selectedTimeSlot,
+                  calculateTotal: route.params.calculateTotal,})}
+                else if(date){
+                    Alert.alert("Please select a time slot!");
+                }
+                else{
+                    Alert.alert("Please pick a date!");
+                }
+              }
+              }
+            />
+          </View>
+          </View>
+        </>
+      )}
+    </>
     );
 }
 
