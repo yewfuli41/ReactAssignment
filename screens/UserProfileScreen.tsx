@@ -71,7 +71,7 @@ const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
                 style={style.logoutButton}
                 onPress={() => {
                     Alert.alert('Logged out');
-                    navigation.navigate('LoginMain');
+                    navigation.replace('LoginMain');
                 }}
             >
                 <Text style={style.logoutButtonText}>Log out</Text>
