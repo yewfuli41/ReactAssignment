@@ -4,11 +4,15 @@ import SwipeableScreen from "./SwipeNavigation";
 import styles from "./styleSheet";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types'; 
-import BookingDetails  from './BookingDetails'
+import BookingDetails  from './BookingDetails';
+
 type Props = StackScreenProps<RootStackParamList, 'BookingHome'>;
 const buttons=[ { title: "Dental Consultation",description:"some description" },
     { title: "Scaling", description:"some description"},
     { title: "X-Ray", description:"some description"},]
+
+    
+
 const ServiceScreen = ({navigation}: Props) => 
 (<View style={styles.container}>
     <Text style={[styles.title]}>Services</Text>

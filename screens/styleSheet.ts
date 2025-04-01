@@ -16,7 +16,7 @@ const style = StyleSheet.create({
       },
     backButton:{
         alignSelf: 'flex-start', 
-        width: 100, 
+        width: 100,
         marginTop: 10, 
     },
     nextButton: {

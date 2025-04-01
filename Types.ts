@@ -8,6 +8,17 @@ export type RootStackParamList = {
     dentistName: string; 
     appointmentDate: string; 
     timeSlot:string;
-    calculateTotal:(serviceName:string)=>number
+    calculateTotal:(serviceName:string)=>number};
+  
+  ProfileScreen: undefined,
+  UserProfile: undefined;
+  EditProfile: {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    gender: string;
+    dateOfBirth: string;
   };
+  HowToGo: undefined;
+  FAQ: undefined;
 };
