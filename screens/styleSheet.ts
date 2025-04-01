@@ -1,43 +1,276 @@
-import React from 'react';
-import{StyleSheet} from 'react-native';
+
+import { StyleSheet } from 'react-native';
 
 const style = StyleSheet.create({
-    container:{
-        padding:20,
-        alignItems:'center'
-    },
-    text:{
-        color:'black'
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 20,
-      },
-    backButton:{
-        alignSelf: 'flex-start', 
-        width: 100,
-        marginTop: 10, 
-    },
-    nextButton: {
-        alignSelf: "flex-end",
-        marginTop: 10,
-        width: 100,
-      },
-      buttonRow: {
-        flexDirection: "row", // Arrange buttons in a row
-        justifyContent: "space-around", // Space between buttons
-        marginTop: 20,
-      },
-    radioButton:{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: 200, // Adjust width as needed
-        padding: 8,
-        borderWidth:1,
-        borderRadius: 4,
-        marginBottom: 8,  
-    }
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f9f9f9',
+  },
+  text: {
+    color: 'black'
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    width: 100,
+    marginTop: 10,
+  },
+  nextButton: {
+    alignSelf: "flex-end",
+    marginTop: 10,
+    width: 100,
+  },
+  buttonRow: {
+    flexDirection: "row", // Arrange buttons in a row
+    justifyContent: "space-around", // Space between buttons
+    marginTop: 20,
+  },
+  editProfilecontainer: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#ffffff",
+  },
+  section: {
+    flex: 1,
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#333",
+  },
+  infoItem: {
+    marginBottom: 12,
+  },
+  infoLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 4,
+    color: "#666",
+  },
+  infoValue: {
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  infoValueLink: {
+    fontSize: 16,
+    color: "#007AFF",
+    textDecorationLine: "underline",
+  },
+  mapPlaceholder: {
+    height: 200,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "ddd",
+    padding: 20,
+  },
+  mapPlaceholderText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#666",
+    textAlign: "center",
+  },
+  mapPlaceholderSubText: {
+    fontSize: 12,
+    color: "#999",
+    marginTop: 5,
+    textAlign: "center",
+  },
+  openMapsButton: {
+    backgroundColor: "#007AFF",
+    padding: 12,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  openMapsButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  directionItem: {
+    marginBottom: 15,
+  },
+  directionTitle: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 8,
+  },
+  directionText: {
+    fontSize: 15,
+    lineHeight: 22,
+  },
+
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  faqItem: {
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+  },
+  faqQuestion: {
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  questionText: {
+    fontSize: 16,
+    fontWeight: '500',
+    flex: 1,
+  },
+  expandIcon: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  faqAnswer: {
+    padding: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+  },
+  answerText: {
+    fontSize: 16,
+  },
+
+formGroup: {
+    marginBottom: 20,
+},
+label: {
+    fontSize: 16,
+    marginBottom: 5,
+    fontWeight: '500',
+},
+input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    padding: 12,
+    fontSize: 16,
+},
+radioGroup: {
+    flexDirection: 'row',
+    marginTop: 5,
+},
+radioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20,
+},
+radio: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#007AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+},
+radioSelected: {
+    backgroundColor: '#007AFF',
+},
+radioLabel: {
+    fontSize: 16,
+},
+buttonContainer: {
+    marginTop: 20,
+    marginBottom: 40,
+},
+saveButton: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+},
+saveButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+},
+cancelButton: {
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+},
+cancelButtonText: {
+    fontSize: 16,
+},
+inputError:{
+    borderColor: '#ff4d4d',
+    borderWidth:1,
+},
+errorText:{
+    color:'#ff4d4d',
+    fontSize: 14,
+    marginTop:4,
+},
+
+profileImagePlaceholder: {
+  width: 120,
+  height: 120,
+  borderRadius: 60,
+  backgroundColor: '#e0e0e0',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginVertical: 20,
+},
+profileImagePlaceholderText: {
+  fontSize: 60,
+  color: '#888',
+},
+userName: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  marginBottom: 5,
+},
+userEmail: {
+  fontSize: 16,
+  color: '#666',
+  marginBottom: 30,
+},
+optionsContainer: {
+  width: '100%',
+  marginBottom: 40,
+},
+optionButton: {
+  backgroundColor: '#ffffff',
+  padding: 15,
+  borderRadius: 10,
+  marginBottom: 15,
+  borderWidth: 1,
+  borderColor: '#ddd',
+},
+optionText: {
+  fontSize: 16,
+  fontWeight: '500',
+  textAlign: 'center',
+},
+logoutButton: {
+  backgroundColor: '#ff4d4d',
+  padding: 15,
+  borderRadius: 10,
+  width: '100%',
+  alignItems: 'center',
+  position: 'absolute',
+  bottom: 30,
+},
+logoutButtonText: {
+  color: 'white',
+  fontSize: 16,
+  fontWeight: '600',
+},
 })
 export default style;
