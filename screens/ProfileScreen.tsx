@@ -7,11 +7,14 @@ import FAQScreen from '../screens/FAQScreen';
 import HowToGoScreen from '../screens/HowToGoScreen';
 import WelcomeLogin from "../LoginScreen/WelcomeLogin";
 import { RootStackParamList } from '../Types';
-
+import SwipeableScreen from "./SwipeNavigation";
 const Stack = createStackNavigator<RootStackParamList>();
 
 const ProfileScreen = () => {
   return (
+    <SwipeableScreen 
+    screenIndex={3}
+    renderContent = {()=>(
       <Stack.Navigator initialRouteName="UserProfile">
         <Stack.Screen 
           name="UserProfile" 
@@ -34,7 +37,7 @@ const ProfileScreen = () => {
           options={{ title: 'How To Go' }} 
         />
       </Stack.Navigator>
-  );
+  )}/>);
 };
 
 export default ProfileScreen;
