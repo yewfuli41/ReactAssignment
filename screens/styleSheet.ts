@@ -11,7 +11,7 @@ const style = StyleSheet.create({
     },
     button:{
         alignSelf: 'flex-start', 
-        width: 100, 
+        width: 100,
         marginTop: 10, 
     }
 })
