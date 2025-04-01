@@ -5,6 +5,7 @@ import UserProfileScreen from '../screens/UserProfileScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import FAQScreen from '../screens/FAQScreen';
 import HowToGoScreen from '../screens/HowToGoScreen';
+import WelcomeLogin from "../LoginScreen/WelcomeLogin";
 import { RootStackParamList } from '../Types';
 
 const Stack = createStackNavigator<RootStackParamList>();

@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types';
-import { RouteProp } from '@react-navigation/native';
+import LogoutPopUp from '../LoginScreen/LogoutPopUp';
+
 
 
 type UserProfileScreenProps = {
@@ -16,6 +17,7 @@ type UserProfileScreenProps = {
 }
 
 const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
+    
     const [userData, setUserData] =useState(
         {
             //hardcode, later see what to do with database
@@ -68,11 +70,14 @@ const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
 
             <TouchableOpacity
                 style={styles.logoutButton}
-                onPress={() => Alert.alert('Logged out')}
+                onPress={() => {
+                    Alert.alert('Logged out');
+                    navigation.navigate('LoginMain');
+                }}
             >
                 <Text style={styles.logoutButtonText}>Log out</Text>
             </TouchableOpacity>
-            {/* the button here should navigate to the LoginScreen? */}
+
         </View>
     );
 };

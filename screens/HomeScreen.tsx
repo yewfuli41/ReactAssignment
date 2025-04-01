@@ -13,4 +13,4 @@ export const HomeScreen = () =>
     <Text style={styles.text}>Some Certificates</Text>
     </View>
   )}
-   />);
+/>);
