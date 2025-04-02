@@ -1,5 +1,4 @@
 export type RootStackParamList = {
-  BookingHome: undefined;
   ProfileScreen: undefined;
   UserProfile: undefined;
   EditProfile: {
@@ -11,9 +10,7 @@ export type RootStackParamList = {
   };
   HowToGo: undefined;
   FAQ: undefined;
-  BookingDetails: {
-    serviceName:string;
-    calculateTotal:(serviceName:string)=>number};
+  BookingDetails: undefined;
   BookingConfirm: {
     serviceName: string; 
     dentistName: string; 

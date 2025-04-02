@@ -12,7 +12,7 @@ import { Directions } from "react-native-gesture-handler";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Types';
-import style from "./stylesheet";
+import style from './styleSheet';
 
 type HowToGoScreenProps = {
     navigation: StackNavigationProp<RootStackParamList, 'HowToGo'>;

@@ -1,6 +1,4 @@
 import React from 'react';
-import SwipeableScreen from './SwipeNavigation';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from './HomeScreen';
 import ServiceScreen from './ServiceScreen';
@@ -14,28 +12,10 @@ LogBox.ignoreLogs([
     "Do you have a screen named", // Ignore duplicate name warning
     "Home, Home > Home",  // Ignore duplicate screen name warning
   ]);
-import { RootStackParamList } from '../Types';
-import BookingDetails from './BookingDetails';
-import BookingConfirm from './BookingConfirm';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator<RootStackParamList>();
 
-
-function ServiceStack() {
-    return (
-        <SwipeableScreen
-            screenIndex={1} // Index for the "Service" tab
-            renderContent={() => (
-                <Stack.Navigator initialRouteName="BookingHome" screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="BookingHome" component={ServiceScreen} />
-                    <Stack.Screen name="BookingDetails" component={BookingDetails} />
-                    <Stack.Screen name="BookingConfirm" component={BookingConfirm} />
-                </Stack.Navigator>)}
-        />
-    );
-}
 const NavigationScreen = () => {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -66,7 +46,7 @@ const NavigationScreen = () => {
                 />
                 <Tab.Screen
                     name="Service"
-                    component={ServiceStack}
+                    component={ServiceScreen}
                     options={{
                         headerShown: false,
                         tabBarIcon: () => {
