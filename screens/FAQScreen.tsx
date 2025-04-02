@@ -9,6 +9,7 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Types';
+import style from './styleSheet';
 
 type FAQItem = {
     question: string;
@@ -40,24 +41,24 @@ const FAQScreen = ({navigation, route}: FAQScreenProps) => {
     };
 
     return (
-        <ScrollView style={styles.container}>
-            <Text style={styles.title}>Frequently Asked Questions</Text>
+        <ScrollView style={style.editProfilecontainer}>
+            <Text style={style.title}>Frequently Asked Questions</Text>
 
             {faqData.map((faq, index) => (
-                <View key={index} style={styles.faqItem}>
+                <View key={index} style={style.faqItem}>
                     <TouchableOpacity
-                        style={styles.faqQuestion}
+                        style={style.faqQuestion}
                         onPress={() => toggleFAQ(index)}
                     >
-                        <Text style={styles.questionText}>{faq.question}</Text>
-                        <Text style={styles.expandIcon}>
+                        <Text style={style.questionText}>{faq.question}</Text>
+                        <Text style={style.expandIcon}>
                             {expandedId === index ? '−' : '+'}
                         </Text>
                     </TouchableOpacity>
 
                     {expandedId === index && (
-                        <View style={styles.faqAnswer}>
-                            <Text style={styles.answerText}>{faq.answer}</Text>
+                        <View style={style.faqAnswer}>
+                            <Text style={style.answerText}>{faq.answer}</Text>
                         </View>
                     )}
                 </View>
@@ -66,47 +67,5 @@ const FAQScreen = ({navigation, route}: FAQScreenProps) => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#ffffff',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    faqItem: {
-        marginBottom: 15,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-    },
-    faqQuestion: {
-        padding: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    questionText: {
-        fontSize: 16,
-        fontWeight: '500',
-        flex: 1,
-    },
-    expandIcon: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    faqAnswer: {
-        padding: 15,
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
-    },
-    answerText: {
-        fontSize: 16,
-    },
-});
 
 export default FAQScreen;
