@@ -8,7 +8,7 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types';
 import style from './styleSheet';
-
+;
 
 
 type UserProfileScreenProps = {
@@ -16,6 +16,7 @@ type UserProfileScreenProps = {
 }
 
 const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
+
     
     const [userData, setUserData] =useState(
         {
@@ -23,7 +24,7 @@ const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
             name: 'John Doe',
             email: 'john.doe@example.com',
             dateOfBirth: "2000-01-01",
-            phoneNumber: "011-1213141",
+            phoneNumber: "011-1111111",
             gender: "Male",
         }); 
 
@@ -67,15 +68,7 @@ const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
                 </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-                style={style.logoutButton}
-                onPress={() => {
-                    Alert.alert('Logged out');
-                    navigation.replace('LoginMain');
-                }}
-            >
-                <Text style={style.logoutButtonText}>Log out</Text>
-            </TouchableOpacity>
+          
 
         </View>
     );

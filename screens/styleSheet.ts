@@ -272,5 +272,34 @@ logoutButtonText: {
   fontSize: 16,
   fontWeight: '600',
 },
+chatButton:{
+  color:'#15b5b0',
+  fontSize:45,
+},  
+profileBackground: {
+  padding: 20,
+},
+profileImage: {
+  width: 64,
+  height: 64,
+  borderRadius: 32,
+  alignSelf: 'flex-end',
+  marginBottom: 8,
+},
+profileName: {
+  color: 'black',
+  fontSize: 20,
+  alignSelf: 'flex-end',
+},
+drawerItemsContainer: {
+  backgroundColor: '#fff',
+  flex: 1,
+},
+footer: {
+  padding: 15,
+  borderTopWidth: 1,
+  borderTopColor: 'grey',
+},
+
 })
 export default style;

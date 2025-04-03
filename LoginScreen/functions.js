@@ -1,45 +1,51 @@
 const users = [
   { email: 'meimei@gmel.com', password: '12345' },
 
-];
+];// data not sure what todo
 
 export const isUser = (email, pwd) => {
-  const user = users.find((u) => u.email === email); 
+ 
+  // check empty
+  if(email.trim()==="") return "Email cannot be empty!";
+  if (pwd.trim() === "") return "Password cannot be empty!";
+ 
+  // check user exist
+  const user = users.find((u) => u.email === email);
   if (!user) return "Incorrect email!";
   if (user.password !== pwd) return "Incorrect password!";
+
   return null;
 };
 
-export const showErrorMessage = (msg, setError) => {
-  setError(msg); // Fix: Pass `setError` from the component
-};
-
-export const authentication = (email, password, setError) => {
+export const authentication = (email, password) => {
   const errorMsg = isUser(email, password);
   if (errorMsg) {
-    showErrorMessage(errorMsg, setError); 
-    return false;
-  }
-  setError('');
-  return true;
-};
-
+   return errorMsg;
+}};
+  export const dialingCode = [ // hard code dialing code
+    { key: "MY", value: "+60" },
+    { key: "IDN", value: "+62" },
+    { key: "PH", value: "+63" },
+    { key: "SG", value: "+65" },
+    { key: "TH", value: "+66" },
+  ];
   export function handleRegister(email, name, mobile, password, confirmPassword, setErrors) {
     let errors = {};
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const mobilePattern = /^\+?\d{9,14}$/; 
   
     // email validation
-    if (!email) {
+    if (!email||email.trim()==="") {
       errors.email = "Email is required";
     } else if (!emailPattern.test(email)) {
-      errors.email = "Invalid email";
+      errors.email = "Invalid email format";
     } else if (users.some(user => user.email === email)) {
       errors.email = "Email already registered";
     }
   
     // name validation
-    if (!name) {
+    let nam = name.toUpperCase()
+    if (!nam || nam.trim() === "") {
       errors.name = "Name is required";
     }
     
