@@ -142,31 +142,31 @@ const style = StyleSheet.create({
     fontSize: 16,
   },
 
-formGroup: {
+  formGroup: {
     marginBottom: 20,
-},
-label: {
+  },
+  label: {
     fontSize: 16,
     marginBottom: 5,
     fontWeight: '500',
-},
-input: {
+  },
+  input: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 5,
     padding: 12,
     fontSize: 16,
-},
-radioGroup: {
+  },
+  radioGroup: {
     flexDirection: 'row',
     marginTop: 5,
-},
-radioButton: {
+  },
+  radioButton: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 20,
-},
-radio: {
+  },
+  radio: {
     height: 20,
     width: 20,
     borderRadius: 10,
@@ -175,102 +175,124 @@ radio: {
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 8,
-},
-radioSelected: {
+  },
+  radioSelected: {
     backgroundColor: '#007AFF',
-},
-radioLabel: {
+  },
+  radioLabel: {
     fontSize: 16,
-},
-buttonContainer: {
+  },
+  buttonContainer: {
     marginTop: 20,
     marginBottom: 40,
-},
-saveButton: {
+  },
+  saveButton: {
     backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
     marginBottom: 10,
-},
-saveButtonText: {
+  },
+  saveButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
-},
-cancelButton: {
+  },
+  cancelButton: {
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ddd',
-},
-cancelButtonText: {
+  },
+  cancelButtonText: {
     fontSize: 16,
-},
-inputError:{
+  },
+  inputError: {
     borderColor: '#ff4d4d',
-    borderWidth:1,
-},
-errorText:{
-    color:'#ff4d4d',
+    borderWidth: 1,
+  },
+  errorText: {
+    color: '#ff4d4d',
     fontSize: 14,
-    marginTop:4,
-},
+    marginTop: 4,
+  },
 
-profileImagePlaceholder: {
-  width: 120,
-  height: 120,
-  borderRadius: 60,
-  backgroundColor: '#e0e0e0',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginVertical: 20,
-},
-profileImagePlaceholderText: {
-  fontSize: 60,
-  color: '#888',
-},
-userName: {
-  fontSize: 24,
-  fontWeight: 'bold',
-  marginBottom: 5,
-},
-userEmail: {
-  fontSize: 16,
-  color: '#666',
-  marginBottom: 30,
-},
-optionsContainer: {
-  width: '100%',
-  marginBottom: 40,
-},
-optionButton: {
-  backgroundColor: '#ffffff',
-  padding: 15,
-  borderRadius: 10,
-  marginBottom: 15,
-  borderWidth: 1,
-  borderColor: '#ddd',
-},
-optionText: {
-  fontSize: 16,
-  fontWeight: '500',
-  textAlign: 'center',
-},
-logoutButton: {
-  backgroundColor: '#ff4d4d',
-  padding: 15,
-  borderRadius: 10,
-  width: '100%',
-  alignItems: 'center',
-  position: 'absolute',
-  bottom: 30,
-},
-logoutButtonText: {
-  color: 'white',
-  fontSize: 16,
-  fontWeight: '600',
-},
+  profileImagePlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#e0e0e0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  profileImagePlaceholderText: {
+    fontSize: 60,
+    color: '#888',
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  userEmail: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 30,
+  },
+  optionsContainer: {
+    width: '100%',
+    marginBottom: 40,
+  },
+  optionButton: {
+    backgroundColor: '#ffffff',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  optionText: {
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  logoutButton: {
+    backgroundColor: '#ff4d4d',
+    padding: 15,
+    borderRadius: 10,
+    width: '100%',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 30,
+  },
+  logoutButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  bookRecordsContainer: {
+    alignSelf: "stretch",
+    marginVertical: 5,
+    marginHorizontal: 10,
+    padding: 10,
+    backgroundColor: "#fffff0",
+    borderRadius: 8,
+  },
+  bookRecordHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  bookRecordIndex: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  bookRecordDate: {
+    color: "grey",
+  },
+  bookRecordDetails: {
+    marginTop: 8,
+  }
 })
 export default style;

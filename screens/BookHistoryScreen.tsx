@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, ScrollView} from "react-native";
 import SwipeableScreen from "./SwipeNavigation";
 import styles from "./styleSheet";
 //import SQLite from "react-native-sqlite-storage";
@@ -17,16 +17,16 @@ const BookingItem = ({ booking }) => {
   return (
     <TouchableOpacity
       onPress={() => setExpanded(!expanded)}
-      style={itemStyles.bookingContainer}
+      style={styles.bookRecordsContainer}
     >
       {/* Collapsed header view */}
-      <View style={itemStyles.header}>
-        <Text style={itemStyles.title}>{booking.title}</Text>
-        <Text style={itemStyles.date}>{booking.date}</Text>
+      <View style={styles.bookRecordHeader}>
+        <Text style={styles.bookRecordIndex}>{booking.id}</Text>
+        <Text style={styles.bookRecordDate}>{booking.date}</Text>
       </View>
       {/* Expanded details view */}
       {expanded && (
-        <View style={itemStyles.details}>
+        <View style={styles.bookRecordDetails}>
           <Text>Service: {booking.service}</Text>
           <Text>Dentist: {booking.dentist}</Text>
           <Text>Time Slot: {booking.timeSlot}</Text>
@@ -38,11 +38,10 @@ const BookingItem = ({ booking }) => {
   );
 };
 
-// Sample booking data
+//Sample booking data
 const sampleBookings = [
   {
     id: "1",
-    title: "Booking #1",
     date: "2025-04-10",
     service: "Dental Consultation",
     dentist: "Dr Lee Wei",
@@ -51,50 +50,132 @@ const sampleBookings = [
   },
   {
     id: "2",
-    title: "Booking #2",
     date: "2025-04-12",
     service: "Scaling",
     dentist: "Dr Micheal Thompson",
     timeSlot: "3:30 PM - 5:00 PM",
     price: 100,
   },
-  // Add more bookings as needed
+  {
+    id: "3",
+    date: "2025-04-15",
+    service: "X-Ray",
+    dentist: "Dr Muhammad Faizal Ismail",
+    timeSlot: "5:30 PM - 7:00 PM",
+    price: 150,
+  },
+  {
+    id: "4",
+    date: "2025-04-17",
+    service: "Tooth Extraction",
+    dentist: "Dr John Smith",
+    timeSlot: "9:00 AM - 10:00 AM",
+    price: 200,
+  },
+  {
+    id: "5",
+    date: "2025-04-20",
+    service: "Dental Filling",
+    dentist: "Dr Lisa Ray",
+    timeSlot: "10:30 AM - 11:30 AM",
+    price: 80,
+  },
+  {
+    id: "6",
+    date: "2025-04-22",
+    service: "Teeth Whitening",
+    dentist: "Dr Megan Fox",
+    timeSlot: "12:00 PM - 1:00 PM",
+    price: 250,
+  },
+  {
+    id: "7",
+    date: "2025-04-24",
+    service: "Braces Consultation",
+    dentist: "Dr Mike Johnson",
+    timeSlot: "2:00 PM - 3:00 PM",
+    price: 120,
+  },
+  {
+    id: "8",
+    date: "2025-04-26",
+    service: "Oral Surgery",
+    dentist: "Dr Sarah Connor",
+    timeSlot: "3:30 PM - 5:00 PM",
+    price: 300,
+  },
+  {
+    id: "9",
+    date: "2025-04-28",
+    service: "Dental Cleaning",
+    dentist: "Dr David Banner",
+    timeSlot: "8:30 AM - 9:30 AM",
+    price: 60,
+  },
+  {
+    id: "10",
+    date: "2025-04-30",
+    service: "Implant Consultation",
+    dentist: "Dr Bruce Wayne",
+    timeSlot: "11:00 AM - 12:00 PM",
+    price: 350,
+  },
+  {
+    id: "11",
+    date: "2025-05-02",
+    service: "Root Canal",
+    dentist: "Dr Clark Kent",
+    timeSlot: "1:30 PM - 3:00 PM",
+    price: 400,
+  },
+  {
+    id: "12",
+    date: "2025-05-04",
+    service: "Periodontal Treatment",
+    dentist: "Dr Diana Prince",
+    timeSlot: "3:30 PM - 4:30 PM",
+    price: 180,
+  },
+  {
+    id: "13",
+    date: "2025-05-04",
+    service: "Periodontal Treatment",
+    dentist: "Dr Diana Prince",
+    timeSlot: "3:30 PM - 4:30 PM",
+    price: 180,
+  },
+  {
+    id: "14",
+    date: "2025-05-04",
+    service: "Periodontal Treatment",
+    dentist: "Dr Diana Prince",
+    timeSlot: "3:30 PM - 4:30 PM",
+    price: 180,
+  },
+  {
+    id: "15",
+    date: "2025-05-04",
+    service: "Periodontal Treatment",
+    dentist: "Dr Diana Prince",
+    timeSlot: "3:30 PM - 4:30 PM",
+    price: 180,
+  },
 ];
 
 export const BookHistoryScreen = () => (
   <SwipeableScreen
     screenIndex={2}
     renderContent={() => (
-      <FlatList
-        data={sampleBookings}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <BookingItem booking={item} />}
-        contentContainerStyle={styles.container} // Use your imported styles here if needed
-      />
+      <View style = {{flex:1}}>
+        <Text style={[styles.title]}>History</Text>
+        <FlatList
+          data={sampleBookings}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <BookingItem booking={item} />}
+          contentContainerStyle={styles.bookRecordsContainer}
+        />
+      </View>
     )}
   />
 );
 
-const itemStyles = StyleSheet.create({
-  bookingContainer: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    marginBottom: 10,
-    padding: 10,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  date: {
-    color: "#666",
-  },
-  details: {
-    marginTop: 10,
-  },
-});
