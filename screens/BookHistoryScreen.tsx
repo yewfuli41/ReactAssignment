@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import SwipeableScreen from "./SwipeNavigation";
-import SQLite from "react-native-sqlite-storage";
 import styles from "./styleSheet";
+//import SQLite from "react-native-sqlite-storage";
 
-const db = SQLite.openDatabase(
-  { name: "BookingDB", location: "default" },
-  () => console.log("Database opened successfully"),
-  error => console.log("Error opening database: ", error)
-);
+// const db = SQLite.openDatabase(
+//   { name: "BookingDB", location: "default" },
+//   () => console.log("Database opened successfully"),
+//   error => console.log("Error opening database: ", error)
+// );
 
 // BookingItem component displays a single booking record.
 const BookingItem = ({ booking }) => {
