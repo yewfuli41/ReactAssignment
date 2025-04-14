@@ -7,7 +7,6 @@ import { RadioButton } from "react-native-paper";
 export type Props = StackScreenProps<RootStackParamList, 'BookingConfirm'>;
 
 const App = ({ route, navigation }: Props) => {
-  console.log("Route Params:", route.params); // Debugging
   const paymentMethods = [
     { id: 1, method: 'Online Banking' },
     { id: 2, method: 'Credit/Debit Card' },

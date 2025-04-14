@@ -1,7 +1,17 @@
-import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, ScrollView} from "react-native";
+import React, { useState,useEffect } from "react";
+import { View, Text, FlatList, TouchableOpacity, ScrollView,Alert} from "react-native";
 import SwipeableScreen from "./SwipeNavigation";
 import styles from "./styleSheet";
+
+type Booking = {
+  booking_id: number;
+  //user_id: number;
+  service: string;
+  dentistName: string;
+  bookingDate: string;
+  timeSlot: string;
+  amount: number;
+};
 //import SQLite from "react-native-sqlite-storage";
 
 // const db = SQLite.openDatabase(
@@ -11,9 +21,9 @@ import styles from "./styleSheet";
 // );
 
 // BookingItem component displays a single booking record.
-const BookingItem = ({ booking }) => {
-  const [expanded, setExpanded] = useState(false);
-
+const BookingItem = ({ booking }:{booking:Booking}) => {
+  const [expanded, setExpanded] = useState(false)
+  
   return (
     <TouchableOpacity
       onPress={() => setExpanded(!expanded)}
@@ -21,16 +31,16 @@ const BookingItem = ({ booking }) => {
     >
       {/* Collapsed header view */}
       <View style={styles.bookRecordHeader}>
-        <Text style={styles.bookRecordIndex}>{booking.id}</Text>
-        <Text style={styles.bookRecordDate}>{booking.date}</Text>
+        <Text style={styles.bookRecordIndex}>{booking.booking_id}</Text>
+        <Text style={styles.bookRecordDate}>{booking.bookingDate}</Text>
       </View>
       {/* Expanded details view */}
       {expanded && (
         <View style={styles.bookRecordDetails}>
           <Text>Service: {booking.service}</Text>
-          <Text>Dentist: {booking.dentist}</Text>
+          <Text>Dentist: {booking.dentistName}</Text>
           <Text>Time Slot: {booking.timeSlot}</Text>
-          <Text>Price: ${booking.price}</Text>
+          <Text>Price: ${booking.amount}</Text>
           {/* Add any additional booking details here */}
         </View>
       )}
@@ -38,7 +48,7 @@ const BookingItem = ({ booking }) => {
   );
 };
 
-//Sample booking data
+/*//Sample booking data
 const sampleBookings = [
   {
     id: "1",
@@ -160,17 +170,51 @@ const sampleBookings = [
     timeSlot: "3:30 PM - 4:30 PM",
     price: 180,
   },
-];
+];*/
 
-export const BookHistoryScreen = () => (
+export const BookHistoryScreen = () => {
+  const [bookings,setBookings] = useState<Booking[]>([]);
+  const [isFetching,setIsFetching] = useState(false)
+  
+  const _load = () =>{
+   
+    let url = 'http://10.0.2.2:5000/api/bookings'
+    setIsFetching(true)
+    fetch(url, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        Alert.alert('Error:',response.status.toString())
+        throw Error('Error:'+response.status)
+      }
+      setIsFetching(false)
+      return response.json().catch(err => Promise.reject('Failed to parse JSON'))
+    })
+    .then(booking=>{
+      console.log(booking)
+      setBookings(booking)}
+    )
+    .catch(error=>{
+      console.log(error)
+    })
+  }
+  useEffect(()=>{
+    console.log('Fetching data from API...');
+    _load()
+  },[])
+  return(
   <SwipeableScreen
     screenIndex={2}
     renderContent={() => (
       <View style = {{flex:1}}>
         <Text style={[styles.title]}>History</Text>
         <FlatList
-          data={sampleBookings}
-          keyExtractor={(item) => item.id}
+          data={bookings}
+          keyExtractor={(item) => item.booking_id.toString()}
           renderItem={({ item }) => <BookingItem booking={item} />}
           contentContainerStyle={styles.bookRecordsContainer}
         />
@@ -178,4 +222,4 @@ export const BookHistoryScreen = () => (
     )}
   />
 );
-
+}
