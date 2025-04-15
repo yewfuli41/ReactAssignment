@@ -72,17 +72,7 @@ const MyDrawerComponent = (props:any) => {
 };
 
 
-function ServiceStack() {
-  return (
 
-    <Stack.Navigator initialRouteName="BookingHome" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="BookingHome" component={ServiceScreen} />
-      <Stack.Screen name="BookingDetails" component={BookingDetails} />
-      <Stack.Screen name="BookingConfirm" component={BookingConfirm} />
-    </Stack.Navigator>);
-   
- 
-}
 
 
 function MainTabs() {
@@ -114,7 +104,7 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Service"
-        component={ServiceStack}
+        component={ServiceScreen}
         options={{
           headerShown: false,
           tabBarIcon: () => {

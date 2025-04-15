@@ -60,7 +60,14 @@ const App = ({ route, navigation }: Props) => {
   return (
     <View style={{ flex: 0.9 }}>
       <View style={styles.container}>
-        <Text style={styles.title}>Booking Confirmation</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
+          <TouchableOpacity
+            style={{ position: 'absolute', left: 12, alignSelf: 'center' }}
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+            <Ionicons name="menu" size={28} color="black" />
+          </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24 }}> Booking Confirmation</Text>
+        </View>
+
         <Text style={styles.text}>Name:{user.name}</Text>
         <Text style={styles.text}>Phone:{user.phone}</Text>
         <Text style={styles.text}>Service: {serviceName}</Text>
@@ -69,13 +76,7 @@ const App = ({ route, navigation }: Props) => {
         <Text style={styles.text}>Time: {timeSlot}</Text>
         <Text style={styles.text}>Total Amount:RM{totalAmount.toFixed(2)}</Text>
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
-        <TouchableOpacity
-          style={{ position: 'absolute', left: 12, alignSelf: 'center' }}
-          onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-          <Ionicons name="menu" size={28} color="black" />
-        </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24 }}> Payment Method</Text>
-      </View>
+
       <Text style={styles.title}>Payment Method:</Text>
 
       <RadioButton.Group onValueChange={(value) => setPaymentMethod(value)} value={paymentMethod}>

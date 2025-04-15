@@ -6,7 +6,7 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ChatBotOpts from './ChatBotOpts.json';
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-
+import SwipeableScreen from '../screens/SwipeNavigation';
 /**main references:
  * 1. https://youtu.be/bGGeD5RkdzQ?si=-q6VQxjBIOb97BvO by Pradip Debnath 
  * 2. https://www.npmjs.com/package/react-native-gifted-chat 
@@ -123,7 +123,9 @@ const ChatScreen = ({ route = { params: {} } }) => {
     };
 
     return (
-        
+        <SwipeableScreen
+        screenIndex={3} 
+        renderContent={() => (
         <SafeAreaProvider>
             <View style={styles.container}>
                 <View style={[styles.headerContainer, { flexDirection: "row" }]}> 
@@ -153,7 +155,7 @@ const ChatScreen = ({ route = { params: {} } }) => {
                     )}  
                 />
             </View>
-        </SafeAreaProvider>
+        </SafeAreaProvider>)}/>
 
     );
 };

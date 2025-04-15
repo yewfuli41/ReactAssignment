@@ -24,7 +24,7 @@ const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
             name: 'John Doe',
             email: 'john.doe@example.com',
             dateOfBirth: "2000-01-01",
-            phoneNumber: "011-1111111",
+            phoneNumber: "011-1213141",
             gender: "Male",
         }); 
 

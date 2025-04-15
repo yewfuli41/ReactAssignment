@@ -30,7 +30,7 @@ const handleLogin = () => {
         const countTime = setTimeout(() => {
           setSuccessPopUp(false);
           close(); // Close the modal
-          navigation.replace('Nav'); // Replace Login with Home (no back button)
+          navigation.replace('Home'); // Replace Login with Home (no back button)
         }, 2500);
   
     

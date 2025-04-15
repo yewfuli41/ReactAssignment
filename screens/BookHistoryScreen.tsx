@@ -91,13 +91,6 @@ export const BookHistoryScreen = () => {
       screenIndex={2}
       renderContent={() => (
         <View style={{ flex: 1 }}>
-          <Text style={[styles.title]}>History</Text>
-          <FlatList
-            data={bookings}
-            keyExtractor={(item) => item.booking_id.toString()}
-            renderItem={({ item }) => <BookingItem booking={item} />}
-            contentContainerStyle={styles.bookRecordsContainer}
-          />
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
             <TouchableOpacity
               style={{ position: 'absolute', left: -9, alignSelf: 'center' }}
@@ -105,6 +98,13 @@ export const BookHistoryScreen = () => {
               <Ionicons name="menu" size={28} color="black" />
             </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Booking History</Text>
           </View>
+          <FlatList
+            data={bookings}
+            keyExtractor={(item) => item.booking_id.toString()}
+            renderItem={({ item }) => <BookingItem booking={item} />}
+            contentContainerStyle={styles.bookRecordsContainer}
+          />
+          
         </View>
       )}
     />

@@ -1,7 +1,7 @@
-import React,{useState,useEffect} from 'react';
-import { View, Text, Button,Alert,Platform,TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, Alert, Platform, TouchableOpacity } from 'react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../Types'; 
+import { RootStackParamList } from '../Types';
 import styles from "./styleSheet";
 import { RadioButton } from "react-native-paper";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
@@ -19,7 +19,7 @@ const App = ({ route, navigation }: Props) => {
   const [date, setDate] = useState<Date>(new Date());
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
-  const [service,setService] = useState<string>("");
+  const [service, setService] = useState<string>("");
   const timeSlots = [
     { id: 1, startTime: "1:30 PM", endTime: "3:00 PM" },
     { id: 2, startTime: "3:30 PM", endTime: "5:00 PM" },
@@ -29,7 +29,7 @@ const App = ({ route, navigation }: Props) => {
   { title: "Scaling", description: "some description" },
   { title: "X-Ray", description: "some description" },
   ]
-
+  const isoDate = date.toISOString().split("T")[0]
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowPicker(false);
     if (selectedDate) {
@@ -46,7 +46,13 @@ const App = ({ route, navigation }: Props) => {
     <>
       {currentStep === "selectService" && (
         <View style={styles.container}>
-          <Text style={[styles.title]}>Services</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
+            <TouchableOpacity
+              style={{ position: 'absolute', left: -9, alignSelf: 'center' }}
+              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+              <Ionicons name="menu" size={28} color="black" />
+            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24 }}> Services</Text>
+          </View>
           {buttons.map((button, index) => (
             <View key={index}>
               <Text>{button.title}</Text>
@@ -67,53 +73,52 @@ const App = ({ route, navigation }: Props) => {
       {currentStep === "selectDentist" && (
         <View>
           <View>
-           <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',  width: '100%', position: 'relative' ,marginTop:10}}>
-                                 <TouchableOpacity 
-                                 style={{  position: 'absolute', left: 12, alignSelf: 'center' }} 
-                                     onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                                         <Ionicons name="menu" size={28} color="black" />
-                             </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Choose Doctor</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
+              <TouchableOpacity
+                style={{ position: 'absolute', left: 12, alignSelf: 'center' }}
+                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                <Ionicons name="menu" size={28} color="black" />
+              </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24 }}> Choose Doctor</Text>
             </View>
-          <RadioButton.Group onValueChange={(value) => setDentist(value)} value={dentist}>
-            {options.map((option) => (
-              <View key={option.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10 }}>
-                <View style={{ flexDirection: "column" }}>
-                  <Text>{option.name}</Text>
-                  <Text>{option.description}</Text>
+            <RadioButton.Group onValueChange={(value) => setDentist(value)} value={dentist}>
+              {options.map((option) => (
+                <View key={option.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10 }}>
+                  <View style={{ flexDirection: "column" }}>
+                    <Text>{option.name}</Text>
+                    <Text>{option.description}</Text>
+                  </View>
+                  <RadioButton value={option.name} />
                 </View>
-                <RadioButton value={option.name} />
+              ))}
+            </RadioButton.Group>
+            <View style={styles.buttonRow}>
+              <View style={styles.backButton} >
+                <Button title="Back" onPress={() => setCurrentStep("selectService")} />
               </View>
-            ))}
-          </RadioButton.Group>
-          <View style={styles.buttonRow}>
-            <View style={styles.backButton} >
-              <Button title="Back" onPress={()=>setCurrentStep("selectService")} />
-            </View>
-            <View style={styles.nextButton}>
-              <Button
-                title="Next"
-                onPress={() => {
-                  if (dentist) {
-                    setCurrentStep("selectDateTime");
-                  } else {
-                    Alert.alert("Please select a dentist first.");
-                  }
-                }}
-              />
+              <View style={styles.nextButton}>
+                <Button
+                  title="Next"
+                  onPress={() => {
+                    if (dentist) {
+                      setCurrentStep("selectDateTime");
+                    } else {
+                      Alert.alert("Please select a dentist first.");
+                    }
+                  }}
+                />
               </View>
             </View>
           </View>
         </View>)}
       {currentStep === "selectDateTime" && (
         <>
-           <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',  width: '100%', position: 'relative' ,marginTop:10}}>
-                                 <TouchableOpacity 
-                                 style={{  position: 'absolute', left: 12, alignSelf: 'center' }} 
-                                     onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                                         <Ionicons name="menu" size={28} color="black" />
-                             </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Choose Date and Time</Text>
-              </View>
-          <Text style={styles.title}>Choose Date and Time</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
+            <TouchableOpacity
+              style={{ position: 'absolute', left: 12, alignSelf: 'center' }}
+              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+              <Ionicons name="menu" size={28} color="black" />
+            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24 }}> Choose Date and Time</Text>
+          </View>
           <View>
             <Text style={styles.text}>Date: {date.toLocaleDateString("en-CA")}</Text>
             <View style={[styles.nextButton, { alignSelf: 'center' }]}>
@@ -161,7 +166,7 @@ const App = ({ route, navigation }: Props) => {
                     navigation.navigate("BookingConfirm", {
                       serviceName: service,
                       dentistName: dentist,
-                      appointmentDate: date.toISOString(),
+                      appointmentDate: isoDate,
                       timeSlot: selectedTimeSlot,
                       calculateTotal: (service) => {
                         if (service === "Dental Consultation") return 50;
@@ -169,7 +174,7 @@ const App = ({ route, navigation }: Props) => {
                         if (service === "X-Ray") return 150;
                         return 0;
                       }
-                  
+
                     })
                   }
                   else if (date) {
