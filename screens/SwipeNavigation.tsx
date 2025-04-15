@@ -4,19 +4,20 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { useSharedValue, withSpring, runOnJS } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import styles from "./styleSheet";
-// Define the type for your navigation stack
-type RootStackParamList = {
-    Home: undefined;
-    Service: undefined;
-    "Booking History": undefined;
-    Profile:undefined}
-  const screens = ["Home", "Service", "Booking History", "Profile"];
 
-  type SwipeableScreenProps = {
+// Define the type for the navigation stack
+type RootStackParamList = {
+  Home: undefined;
+  Service: undefined;
+  "Booking History": undefined;
+    Profile:undefined;
+  Chat:undefined}
+const screens = ["Home", "Service", "Booking History", "Chat"];
+
+type SwipeableScreenProps = {
     screenIndex: number;
-    renderContent: () => React.ReactNode;
-  };
+  renderContent: () => React.ReactNode;
+};
   const HomeScreen = (props:SwipeableScreenProps) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const translateX = useSharedValue(0);
@@ -29,25 +30,25 @@ type RootStackParamList = {
         newIndex -= 1; // Move backward
     }
     if (newIndex !== currentIndex) {
-        setCurrentIndex(newIndex);
-        navigation.navigate(screens[newIndex] as keyof RootStackParamList);
-      }
+      setCurrentIndex(newIndex);
+      navigation.navigate(screens[newIndex] as keyof RootStackParamList);
+    }
   };
 
   useEffect(() => {
-  const unsubscribe = navigation.addListener("state", () => {
-    const state = navigation.getState();
-    if (state) {
-      const routeName = state.routes[state.index].name;
-      const newIndex = screens.indexOf(routeName);
-      if (newIndex !== -1) {
-        setCurrentIndex(newIndex);
+    const unsubscribe = navigation.addListener("state", () => {
+      const state = navigation.getState();
+      if (state) {
+        const routeName = state.routes[state.index].name;
+        const newIndex = screens.indexOf(routeName);
+        if (newIndex !== -1) {
+          setCurrentIndex(newIndex);
+        }
       }
-    }
-  });
+    });
 
-  return unsubscribe;
-}, [navigation]);
+    return unsubscribe;
+  }, [navigation]);
 
 
   const swipeGesture = Gesture.Pan()

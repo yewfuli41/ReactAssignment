@@ -1,12 +1,11 @@
-import { View, Text, TouchableNativeFeedback } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from './ChatDesign';
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { QuickReplies } from 'react-native-gifted-chat/lib/QuickReplies';
-import { useRoute } from '@react-navigation/native';
 import ChatBotOpts from './ChatBotOpts.json';
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 /**main references:
  * 1. https://youtu.be/bGGeD5RkdzQ?si=-q6VQxjBIOb97BvO by Pradip Debnath 
@@ -14,10 +13,9 @@ import ChatBotOpts from './ChatBotOpts.json';
  * 3. quick replies from useEffect: https://stackoverflow.com/questions/61891106/quick-replies-press-function-gifted-chat-react-native 
 */
 
-const ChatScreen = () => {
-    const route = useRoute();
-    const { name } = route.params;
-
+const ChatScreen = ({ route = { params: {} } }) => {
+    const { name = "User" } = route.params || {}; //  to "User" if name is undefined
+    const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
     const [opt, setOptions] = useState(ChatBotOpts);
    
@@ -38,7 +36,7 @@ const ChatScreen = () => {
         ])
     }, [])
 
-    /**Use call back because: 
+    /** use call back because: 
      * no need recreate function everytime component re-render, if yes then performance drop
     */
     // pass msg as an array
@@ -86,20 +84,20 @@ const ChatScreen = () => {
                     }}
                 />
     
-                
-                {currentMessage.quickReplies && (
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 5 }}>
+    
+    {currentMessage.quickReplies && (
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 5 }}>
                         {currentMessage.quickReplies.values.map((option, index) => (
-                            <TouchableOpacity 
-                                key={index}
-                                style={styles.optionsContainer} 
+            <TouchableOpacity 
+                key={index}
+                style={styles.optionsContainer} 
                                 onPress={() => handleQuickReply(option.value)}
-                            >
+            >
                                 <Text style={styles.optionText}>{option.title}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                )}
+            </TouchableOpacity>
+        ))}
+    </View>
+)}
             </View>
         );
     };
@@ -125,10 +123,20 @@ const ChatScreen = () => {
     };
 
     return (
+        
         <SafeAreaProvider>
             <View style={styles.container}>
-                <View style={styles.headerContainer}> 
-                <Text style={styles.header}>Pearly Bot</Text>
+                <View style={[styles.headerContainer, { flexDirection: "row" }]}> 
+                     
+                <View style={styles.container}>
+    <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',  width: '100%', position: 'relative' }}>
+                       <TouchableOpacity 
+                       style={{  position: 'absolute', left: 16, alignSelf: 'center', marginSTop:10 }} 
+                           onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                               <Ionicons name="menu" size={28} color="black" />
+                   </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Pearly Bot</Text>
+    </View>
+    </View>
                 </View>
                
                 <GiftedChat

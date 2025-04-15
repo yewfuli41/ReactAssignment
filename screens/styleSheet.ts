@@ -218,6 +218,7 @@ const style = StyleSheet.create({
     marginTop: 4,
   },
 
+<<<<<<< HEAD
   profileImagePlaceholder: {
     width: 120,
     height: 120,
@@ -294,5 +295,90 @@ const style = StyleSheet.create({
   bookRecordDetails: {
     marginTop: 8,
   }
+=======
+profileImagePlaceholder: {
+  width: 120,
+  height: 120,
+  borderRadius: 60,
+  backgroundColor: '#e0e0e0',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginVertical: 20,
+},
+profileImagePlaceholderText: {
+  fontSize: 60,
+  color: '#888',
+},
+userName: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  marginBottom: 5,
+},
+userEmail: {
+  fontSize: 16,
+  color: '#666',
+  marginBottom: 30,
+},
+optionsContainer: {
+  width: '100%',
+  marginBottom: 40,
+},
+optionButton: {
+  backgroundColor: '#ffffff',
+  padding: 15,
+  borderRadius: 10,
+  marginBottom: 15,
+  borderWidth: 1,
+  borderColor: '#ddd',
+},
+optionText: {
+  fontSize: 16,
+  fontWeight: '500',
+  textAlign: 'center',
+},
+logoutButton: {
+  backgroundColor: '#ff4d4d',
+  padding: 15,
+  borderRadius: 10,
+  width: '100%',
+  alignItems: 'center',
+  position: 'absolute',
+  bottom: 30,
+},
+logoutButtonText: {
+  color: 'white',
+  fontSize: 16,
+  fontWeight: '600',
+},
+chatButton:{
+  color:'#15b5b0',
+  fontSize:45,
+},  
+profileBackground: {
+  padding: 20,
+},
+profileImage: {
+  width: 64,
+  height: 64,
+  borderRadius: 32,
+  alignSelf: 'flex-end',
+  marginBottom: 8,
+},
+profileName: {
+  color: 'black',
+  fontSize: 20,
+  alignSelf: 'flex-end',
+},
+drawerItemsContainer: {
+  backgroundColor: '#fff',
+  flex: 1,
+},
+footer: {
+  padding: 15,
+  borderTopWidth: 1,
+  borderTopColor: 'grey',
+},
+
+>>>>>>> origin/drawer
 })
 export default style;

@@ -1,12 +1,13 @@
 import React,{useState,useEffect} from 'react';
-import { View, Text, Button,Alert,Platform} from 'react-native';
+import { View, Text, Button,Alert,Platform,TouchableOpacity} from 'react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types'; 
 import styles from "./styleSheet";
 import { RadioButton } from "react-native-paper";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 type Props = StackScreenProps<RootStackParamList, 'BookingDetails'>;
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const App = ({ route, navigation }: Props) => {
   const options = [
     { id: 1, name: "Dr Lee Wei", description: "some description" },
@@ -19,7 +20,6 @@ const App = ({ route, navigation }: Props) => {
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
   const [service,setService] = useState<string>("");
-  const isoDate = date.toISOString().split("T")[0];
   const timeSlots = [
     { id: 1, startTime: "1:30 PM", endTime: "3:00 PM" },
     { id: 2, startTime: "3:30 PM", endTime: "5:00 PM" },
@@ -66,6 +66,14 @@ const App = ({ route, navigation }: Props) => {
       }
       {currentStep === "selectDentist" && (
         <View>
+          <View>
+           <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',  width: '100%', position: 'relative' ,marginTop:10}}>
+                                 <TouchableOpacity 
+                                 style={{  position: 'absolute', left: 12, alignSelf: 'center' }} 
+                                     onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                                         <Ionicons name="menu" size={28} color="black" />
+                             </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Choose Doctor</Text>
+            </View>
           <RadioButton.Group onValueChange={(value) => setDentist(value)} value={dentist}>
             {options.map((option) => (
               <View key={option.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10 }}>
@@ -92,11 +100,19 @@ const App = ({ route, navigation }: Props) => {
                   }
                 }}
               />
+              </View>
             </View>
           </View>
         </View>)}
       {currentStep === "selectDateTime" && (
         <>
+           <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',  width: '100%', position: 'relative' ,marginTop:10}}>
+                                 <TouchableOpacity 
+                                 style={{  position: 'absolute', left: 12, alignSelf: 'center' }} 
+                                     onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                                         <Ionicons name="menu" size={28} color="black" />
+                             </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Choose Date and Time</Text>
+              </View>
           <Text style={styles.title}>Choose Date and Time</Text>
           <View>
             <Text style={styles.text}>Date: {date.toLocaleDateString("en-CA")}</Text>
@@ -145,7 +161,7 @@ const App = ({ route, navigation }: Props) => {
                     navigation.navigate("BookingConfirm", {
                       serviceName: service,
                       dentistName: dentist,
-                      appointmentDate: isoDate,
+                      appointmentDate: date.toISOString(),
                       timeSlot: selectedTimeSlot,
                       calculateTotal: (service) => {
                         if (service === "Dental Consultation") return 50;

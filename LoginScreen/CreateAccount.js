@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { View, Text, TouchableNativeFeedback, Modal, TextInput } from 'react-native';
+import React, { useState,useEffect } from "react";
+import { Alert,View, Text, TouchableNativeFeedback, Modal, TextInput } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { styles } from "./StylesCollection";
 import { Picker } from '@react-native-picker/picker';
-import { handleRegister } from "./functions";
+import { handleRegister, dialingCode} from "./functions";
 import SucessCreateAcc from "./SucessCreateAcc";
+
 
 const CreateAccount = ({ visible, close }) => {
   const [successModal, setSuccessModal] = useState(false);
   const [errors, setErrors] = useState({});
-  const [selectedDialingCode, setSelectedDialingCode] = useState("+60");
+  const [selectedDialingCode, setSelectedDialingCode] = useState("+60"); //default is +60
 
-  const dialingCode = [
-    { key: "MY", value: "+60" },
-    { key: "IDN", value: "+62" },
-    { key: "PH", value: "+63" },
-    { key: "SG", value: "+65" },
-    { key: "TH", value: "+66" },
-  ];
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      const formaterr = Object.values(errors).map((obj, ind ) => `${ind + 1}: ${obj}`).join('\n'); // use map return array to display multi err
+      Alert.alert("Error", formaterr);
+    }
+  }, [errors]);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -32,16 +32,16 @@ const CreateAccount = ({ visible, close }) => {
     const isValid = handleRegister(
       formData.email,
       formData.name,
-      phoneDigits, // only digits (no dialing code)
+      phoneDigits, // only digits (no dialing code, dialing code part to be handled when store to db, sad)
       formData.pwd,
       formData.cpwd,
-      setErrors
+      setErrors // direct update error state 
     );
 
     if (isValid) {
-      setSuccessModal(true);
+      setSuccessModal(true); // show sucess pop up
       close();
-      setFormData({
+      setFormData({ // set inout field to empty
         email: "",
         name: "",
         number: "",
@@ -52,90 +52,99 @@ const CreateAccount = ({ visible, close }) => {
   };
 
   const handleChange = (name, value) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value })); // update changes using setForm data and spread op, can work
   };
 
   return (
     <View>
-      <Modal visible={visible} onRequestClose={close} animationType="slide" transparent={true}>
+      <Modal 
+        visible={visible} 
+        onRequestClose={close} 
+        animationType="slide" 
+        transparent={true}
+      >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContainer, { height: '85%' }]}>
-            {/* Close Button */}
+            {/* close Button */}
             <TouchableNativeFeedback onPress={close}>
               <View style={styles.closeButton}>
                 <AntDesign name="closecircleo" size={24} style={styles.closeButtonText}/>
               </View>
             </TouchableNativeFeedback>
 
-            {/* Title */}
+            {/* title */}
             <Text style={styles.modalTitle}>Register</Text>
 
-            {/* Email */}
+            {/* email */}
             <TextInput
               style={styles.inputStyle}
-              placeholder="Email*"
+              placeholder=" Email*"
               keyboardType="email-address"
+              placeholderTextColor={"#15b5b0"}
               value={formData.email}
               onChangeText={(text) => handleChange('email', text)}
             />
-            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-            {/* Name */}
+
+            {/* name */}
             <TextInput
               style={styles.inputStyle}
-              placeholder="Name (as per NRIC)*"
+              placeholder=" Name (as per NRIC)*"
+              placeholderTextColor={"#15b5b0"}
               value={formData.name}
               onChangeText={(text) => handleChange('name', text)}
             />
-            {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+  
 
-            {/* Phone Number */}
+            {/* phone number */}
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ height: 50, width: 140 }}>
+              <View>
                 <Picker
+                  style={{ width: 140 }}
                   selectedValue={selectedDialingCode}
-                  onValueChange={(itemValue) => setSelectedDialingCode(itemValue)}>
+                  onValueChange={(itemValue) => setSelectedDialingCode(itemValue)}
+                >
                   {dialingCode.map((item) => (
                     <Picker.Item 
-                      label={`${item.key} ${item.value}`} 
-                      value={item.value} 
-                      key={item.key} 
+                      label={`${String(item.key)} ${String(item.value)}`} 
+                      value={String(item.value)} 
+                      key={String(item.key)} 
                     />
                   ))}
                 </Picker>
               </View>
               <TextInput
                 style={[styles.inputStyle, { width: 210 }]}
-                placeholder="Mobile Number*"
+                placeholder=" Mobile Number*"
                 keyboardType="numeric"
+                placeholderTextColor={"#15b5b0"}
                 value={formData.number}
                 onChangeText={(text) => handleChange('number', text)}
               />
             </View>
-            {errors.mobile && <Text style={styles.errorText}>{errors.mobile}</Text>}
+         
 
-            {/* Password */}
+            {/* pwd */}
             <TextInput
               style={styles.inputStyle}
-              placeholder="Password"
+              placeholder=" Password"
               secureTextEntry={true}
               value={formData.pwd}
               onChangeText={(text) => handleChange('pwd', text)}
             />
-            {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-
-            {/* Confirm Password */}
+            
+            {/* confirm Password */}
             <TextInput
               style={styles.inputStyle}
-              placeholder="Confirm Password"
+              placeholder=" Confirm Password"
               secureTextEntry={true}
               value={formData.cpwd}
               onChangeText={(text) => handleChange('cpwd', text)}
             />
-            {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+       
 
-            {/* Register Button */}
-            <TouchableNativeFeedback onPress={handleSubmit}>
+            {/* register button */}
+            <TouchableNativeFeedback onPress={()=>handleSubmit()}>
               <View style={styles.normalLoginButton}>
                 <Text style={styles.WelcomeLoginButtonText}>Register</Text>
               </View>

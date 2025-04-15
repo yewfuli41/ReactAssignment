@@ -1,36 +1,40 @@
 import React, { useState, useEffect } from "react";
-import {View,Text,TouchableNativeFeedback,Modal,TextInput, TouchableOpacity} from "react-native";
+import {Alert,View,Text,TouchableNativeFeedback,Modal,TextInput, TouchableOpacity} from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { styles } from "./StylesCollection";
 import {authentication} from './functions';
 import CreateAccount from "./CreateAccount";
-import { useNavigation } from '@react-navigation/native'; 
+import {CommonActions, useNavigation } from '@react-navigation/native'; 
 import LoginSuccess from "./LoginSuccess";
 
-const Login = ({ visible, close }) => {
-
+const Login = ({ visible, close}) => {
+  const navigation = useNavigation();
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
-const [error, setError] = useState('');
 const [successPopUp, setSuccessPopUp] = useState(false);
 const [reg, setRegVisible] = useState(false);
 
-const nav = useNavigation();
+
 
 const handleLogin = () => {
-  const isAuthenticated = authentication(email, password, setError);
-  if (isAuthenticated) {
+ 
+  const err = authentication(email, password);
+  if (!err) {
     setSuccessPopUp(true);
+  }else{
+    Alert.alert(err);
   }
 };
     useEffect(() => {
       if (successPopUp) {
-      const countTime = setTimeout(() => {
-        setSuccessPopUp(false);  
-        nav.navigate('Home'); // bring to homepage
-      }, 2500); // display for 2.5 sec heh
-
-      return () => clearTimeout(countTime);
+        const countTime = setTimeout(() => {
+          setSuccessPopUp(false);
+          close(); // Close the modal
+          navigation.replace('Nav'); // Replace Login with Home (no back button)
+        }, 2500);
+  
+    
+        return () => clearTimeout(countTime);
       }
     }, [successPopUp]);
 
@@ -45,7 +49,7 @@ const handleLogin = () => {
               <View><AntDesign name="closecircleo" style={styles.closeButtonText} /></View>
             </TouchableNativeFeedback>
             
-            {/** Title */}
+            {/** title */}
             <View>
               <Text style={styles.modalTitle}>Login</Text>
             </View>
@@ -72,11 +76,6 @@ const handleLogin = () => {
               />
             </View>
 
-            {/** err msg area */}
-            <View style={{ marginBottom: 10 }}>
-            {error ? <Text style={{ color: 'red', fontSize: 18 }}>{error}</Text> : null}
-            </View>
-
             {/** button */}
             <TouchableNativeFeedback onPress={()=>handleLogin()}>
             <View style={styles.normalLoginButton}>
@@ -84,6 +83,7 @@ const handleLogin = () => {
             </View>
             </TouchableNativeFeedback>
             <LoginSuccess visible={successPopUp}/>
+
 
           {/**link to create account */}
           <View style={{ marginTop: 10, flexDirection: "row", alignItems: "center", alignSelf:'center' }}>

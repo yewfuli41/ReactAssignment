@@ -1,4 +1,4 @@
-import { Link } from "@react-navigation/native";
+import { DrawerActions, Link, useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
     View,
@@ -12,14 +12,20 @@ import { Directions } from "react-native-gesture-handler";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Types';
-import style from './styleSheet';
+import style from "./styleSheet";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 type HowToGoScreenProps = {
     navigation: StackNavigationProp<RootStackParamList, 'HowToGo'>;
     route: RouteProp<RootStackParamList, 'HowToGo'>;
 };
 
-const HowToGoScreen = ({navigation,route}: HowToGoScreenProps) => {
+const HowToGoScreen = (props:any) => {
+   
+    const {name,route} = props;
+     const navigation = useNavigation();
+       
+
     const clinicInfo = {
         //same as idk if can hardcode or need to use another file to store the info
         name: "SChneidermain?? Dental",
@@ -58,7 +64,18 @@ const HowToGoScreen = ({navigation,route}: HowToGoScreenProps) => {
     return (
         <ScrollView style={style.editProfilecontainer}>
             <View style={style.section}>
-                <Text style={style.sectionTitle}>Contact Information</Text>
+    
+                           <View style={{flexDirection:'row', flex:1  }}>
+                           <TouchableOpacity 
+                           style={{ marginLeft:0, alignSelf:'flex-start' }}
+                               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                                   <Ionicons name="menu" size={28} color="black" />
+                       </TouchableOpacity> 
+                       <View style={{ flex: 1, alignItems: 'center' }}>
+                        <Text style={{ fontWeight: "bold", fontSize:24, justifyContent:'center'}}>How To Go</Text>
+                        </View>
+                       </View> 
+                     
 
                 <View style={style.infoItem}>
                     <Text style={style.infoLabel}>Phone:</Text>
