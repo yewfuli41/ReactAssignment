@@ -19,6 +19,7 @@ const App = ({ route, navigation }: Props) => {
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
   const [service,setService] = useState<string>("");
+  const isoDate = date.toISOString().split("T")[0];
   const timeSlots = [
     { id: 1, startTime: "1:30 PM", endTime: "3:00 PM" },
     { id: 2, startTime: "3:30 PM", endTime: "5:00 PM" },
@@ -144,7 +145,7 @@ const App = ({ route, navigation }: Props) => {
                     navigation.navigate("BookingConfirm", {
                       serviceName: service,
                       dentistName: dentist,
-                      appointmentDate: date.toISOString(),
+                      appointmentDate: isoDate,
                       timeSlot: selectedTimeSlot,
                       calculateTotal: (service) => {
                         if (service === "Dental Consultation") return 50;

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, Button, Alert } from 'react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types';
 import styles from './styleSheet';
 import { RadioButton } from "react-native-paper";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export type Props = StackScreenProps<RootStackParamList, 'BookingConfirm'>;
 
 const App = ({ route, navigation }: Props) => {
@@ -17,6 +18,42 @@ const App = ({ route, navigation }: Props) => {
   const { serviceName, dentistName, appointmentDate, timeSlot, calculateTotal } = route.params;
   const user = { name: "John Doe", phone: "011-1213141" }
   const totalAmount = calculateTotal ? calculateTotal(serviceName) : 0;
+  const _save = () => {
+    let url = 'http://10.0.2.2:5000/api/bookings'
+    fetch(url,{
+      method:'POST',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Accept:'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        service : serviceName,
+        dentistName :dentistName,
+        bookingDate : appointmentDate,
+        timeSlot:timeSlot,
+        amount:totalAmount,
+        paymentMethod : paymentMethod
+      })
+    })
+    .then(response => {
+          if (!response.ok) {
+            Alert.alert('Error:',response.status.toString())
+            throw Error('Error:'+response.status)
+          }
+          return response.json().catch(err => Promise.reject('Failed to parse JSON'))
+        })
+        .then(respondJson=>{
+          if(respondJson.affected<=0){
+            Alert.alert('Error in saving')
+          }
+
+        }
+        )
+        .catch(error=>{
+          console.log(error)
+        })
+  }
   return (
     <View style={{ flex: 0.9 }}>
       <View style={styles.container}>
@@ -51,6 +88,7 @@ const App = ({ route, navigation }: Props) => {
                 {
                   text: "OK",
                   onPress: () => {
+                    _save();
                     // Reset the navigation stack and navigate to the home screen
                     navigation.reset({
                       index: 0,

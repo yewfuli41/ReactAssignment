@@ -14,6 +14,7 @@ def get_booking(row):
         'bookingDate' : row[4],
         'timeSlot' : row[5],
         'amount' : row[6],
+        'paymentMethod' : row[7]
     }
     return booking
 
@@ -23,7 +24,6 @@ CORS(app)
 @app.route('/api/bookings',methods=['GET'])
 def index():
     db = sqlite3.connect(DB)
-    print("API called")
     cursor = db.cursor()
     cursor.execute('''
     SELECT bookings.* FROM bookings
@@ -38,7 +38,42 @@ def index():
         bookings.append(booking)
 
     return jsonify(bookings),200
+@app.route('/api/bookings', methods=['POST'])
+def store():
+    if not request.json:
+        abort(404)
+   
 
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute('''SELECT user_id FROM users WHERE name = "John Doe"''')
+    user_id = cursor.fetchone()[0]  
+    new_booking = (
+        user_id,
+        request.json['service'],
+        request.json['dentistName'],
+        request.json['bookingDate'],
+        request.json['timeSlot'],
+        request.json['amount'],
+        request.json['paymentMethod']
+    )
+    cursor.execute('''
+        INSERT INTO bookings(user_id,service,dentistName,bookingDate,timeSlot,amount,paymentMethod)
+        VALUES(?,?,?,?,?,?,?)
+    ''', new_booking)
+
+    booking_id = cursor.lastrowid
+
+    db.commit()
+
+    response = {
+        'id': booking_id,
+        'affected': db.total_changes,
+    }
+
+    db.close()
+
+    return jsonify(response), 201
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-p','--port',default=5000,type=int,help='port to listen on')
