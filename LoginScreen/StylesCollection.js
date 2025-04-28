@@ -1,5 +1,5 @@
 import {StyleSheet,Dimensions} from 'react-native';
-import { createNativeWrapper } from 'react-native-gesture-handler';
+
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
@@ -136,5 +136,10 @@ export const styles = StyleSheet.create({
         color: 'black',
         marginTop: 10,
         padding:20,
+    },
+    googleLogin:{
+        justifyContent:'center',
+        marginLeft: screenWidth*0.45,
+        color:'#DB4437',
     }
 });

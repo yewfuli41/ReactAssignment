@@ -136,7 +136,7 @@ const ChatScreen = ({ route = { params: {} } }) => {
                        style={{  position: 'absolute', left: 16, alignSelf: 'center', marginSTop:10 }} 
                            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
                                <Ionicons name="menu" size={28} color="black" />
-                   </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Pearly Bot</Text>
+                   </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Pearly Live Chat</Text>
     </View>
     </View>
                 </View>

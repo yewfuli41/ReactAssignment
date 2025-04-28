@@ -1,24 +1,37 @@
-import React, { useState,useEffect } from "react";
-import { Alert,View, Text, TouchableNativeFeedback, Modal, TextInput } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { Alert, View, Text, TouchableNativeFeedback, Modal, TextInput } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { styles } from "./StylesCollection";
 import { Picker } from '@react-native-picker/picker';
-import { handleRegister, dialingCode} from "./functions";
+import { handleRegister, dialingCode } from "./functions";
 import SucessCreateAcc from "./SucessCreateAcc";
+let SQLite = require('react-native-sqlite-storage');
+
+
+
+const openCallback = () => {
+  console.log('database open success');
+}
+
+const errorCallback = (err) => {
+  console.error('Error in opening the database: ' + err);
+}
 
 
 const CreateAccount = ({ visible, close }) => {
+
+  // db open
+  let db = SQLite.openDatabase(
+    { name: 'database.sqlite', createFromLocation: '~database.sqlite' },
+    openCallback,
+    errorCallback,
+  )
+
+  // use state block
   const [successModal, setSuccessModal] = useState(false);
   const [errors, setErrors] = useState({});
   const [selectedDialingCode, setSelectedDialingCode] = useState("+60"); //default is +60
-
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      const formaterr = Object.values(errors).map((obj, ind ) => `${ind + 1}: ${obj}`).join('\n'); // use map return array to display multi err
-      Alert.alert("Error", formaterr);
-    }
-  }, [errors]);
-
+  const [phoneNum, setPhoneNum] = useState();
   const [formData, setFormData] = useState({
     email: "",
     name: "",
@@ -27,27 +40,59 @@ const CreateAccount = ({ visible, close }) => {
     cpwd: ""
   });
 
-  const handleSubmit = () => {
-    const phoneDigits = formData.number.replace(/\D/g, ''); 
-    const isValid = handleRegister(
+
+  // use effect for error msg
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      const formaterr = Object.values(errors).map((obj, ind) => `${ind + 1}: ${obj}`).join('\n'); // use map return array to display multi err
+      Alert.alert("Error", formaterr);
+    }
+  }, [errors]);
+
+
+  const handleSubmit = async() => {
+    setPhoneNum(formData.number.replace(/\D/g, ''));
+    const isValid = await handleRegister(
       formData.email,
       formData.name,
-      phoneDigits, // only digits (no dialing code, dialing code part to be handled when store to db, sad)
+      phoneNum, // only digits (no dialing code, dialing code part to be handled when stored to db)
       formData.pwd,
       formData.cpwd,
       setErrors // direct update error state 
     );
 
     if (isValid) {
-      setSuccessModal(true); // show sucess pop up
-      close();
-      setFormData({ // set inout field to empty
-        email: "",
-        name: "",
-        number: "",
-        pwd: "",
-        cpwd: ""
-      });
+      try {
+        //query is here
+        db.transaction(tx => {
+          tx.executeSql(
+            'INSERT INTO users (name, dialingCode, phoneNumber, email, password) VALUES (?, ?, ?, ?, ?)',
+            [formData.name, selectedDialingCode, phoneNum, formData.email, formData.pwd],
+            () => {
+              // succes call back operations
+              setSuccessModal(true); // show success pop-up
+              close();
+              setFormData({ // reset input fields
+                email: "",
+                name: "",
+                number: "",
+                pwd: "",
+                cpwd: ""
+              });
+              console.log("success add new user");
+            },
+            (error) => {
+              //error callback
+              Alert.alert('Error', 'Failed to create account: ' + error.message);
+            }
+          );
+          tx.executeSql('SELECT * FROM users', [], (tx, results) => {
+            console.log('Users:', results.rows.raw());
+          });
+        });
+      } catch (error) {
+        Alert.alert('Error', 'Failed to register user: ' + error.message);
+      }
     }
   };
 
@@ -57,10 +102,10 @@ const CreateAccount = ({ visible, close }) => {
 
   return (
     <View>
-      <Modal 
-        visible={visible} 
-        onRequestClose={close} 
-        animationType="slide" 
+      <Modal
+        visible={visible}
+        onRequestClose={close}
+        animationType="slide"
         transparent={true}
       >
         <View style={styles.modalOverlay}>
@@ -68,7 +113,7 @@ const CreateAccount = ({ visible, close }) => {
             {/* close Button */}
             <TouchableNativeFeedback onPress={close}>
               <View style={styles.closeButton}>
-                <AntDesign name="closecircleo" size={24} style={styles.closeButtonText}/>
+                <AntDesign name="closecircleo" size={24} style={styles.closeButtonText} />
               </View>
             </TouchableNativeFeedback>
 
@@ -94,7 +139,7 @@ const CreateAccount = ({ visible, close }) => {
               value={formData.name}
               onChangeText={(text) => handleChange('name', text)}
             />
-  
+
 
             {/* phone number */}
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -105,10 +150,10 @@ const CreateAccount = ({ visible, close }) => {
                   onValueChange={(itemValue) => setSelectedDialingCode(itemValue)}
                 >
                   {dialingCode.map((item) => (
-                    <Picker.Item 
-                      label={`${String(item.key)} ${String(item.value)}`} 
-                      value={String(item.value)} 
-                      key={String(item.key)} 
+                    <Picker.Item
+                      label={`${String(item.key)} ${String(item.value)}`}
+                      value={String(item.value)}
+                      key={String(item.key)}
                     />
                   ))}
                 </Picker>
@@ -122,7 +167,7 @@ const CreateAccount = ({ visible, close }) => {
                 onChangeText={(text) => handleChange('number', text)}
               />
             </View>
-         
+
 
             {/* pwd */}
             <TextInput
@@ -132,7 +177,7 @@ const CreateAccount = ({ visible, close }) => {
               value={formData.pwd}
               onChangeText={(text) => handleChange('pwd', text)}
             />
-            
+
             {/* confirm Password */}
             <TextInput
               style={styles.inputStyle}
@@ -141,10 +186,10 @@ const CreateAccount = ({ visible, close }) => {
               value={formData.cpwd}
               onChangeText={(text) => handleChange('cpwd', text)}
             />
-       
+
 
             {/* register button */}
-            <TouchableNativeFeedback onPress={()=>handleSubmit()}>
+            <TouchableNativeFeedback onPress={() => handleSubmit()}>
               <View style={styles.normalLoginButton}>
                 <Text style={styles.WelcomeLoginButtonText}>Register</Text>
               </View>
@@ -154,8 +199,8 @@ const CreateAccount = ({ visible, close }) => {
       </Modal>
 
       {/* Success Modal */}
-      <SucessCreateAcc 
-        visible={successModal} 
+      <SucessCreateAcc
+        visible={successModal}
         close={() => setSuccessModal(false)}
       />
     </View>

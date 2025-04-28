@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from "react";
-import {Alert,View,Text,TouchableNativeFeedback,Modal,TextInput, TouchableOpacity} from "react-native";
+import {Alert,View,Text,TouchableNativeFeedback,Modal,TextInput, TouchableOpacity,Button} from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { styles } from "./StylesCollection";
-import {authentication} from './functions';
 import CreateAccount from "./CreateAccount";
-import {CommonActions, useNavigation } from '@react-navigation/native'; 
+import {useNavigation } from '@react-navigation/native'; 
 import LoginSuccess from "./LoginSuccess";
+import { authentication } from "./functions";
+let SQLite = require('react-native-sqlite-storage');
+
+const openCallback = () => {
+  console.log('database open success');
+}
+
+const errorCallback = (err) => {
+  console.error('Error in opening the database: ' + err);
+}
 
 const Login = ({ visible, close}) => {
-  const navigation = useNavigation();
+
+  let db = SQLite.openDatabase(
+    {name: 'database.sqlite', createFromLocation: '~database.sqlite'},
+    openCallback,
+    errorCallback,
+)
+
+const navigation = useNavigation();
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [successPopUp, setSuccessPopUp] = useState(false);
@@ -16,27 +32,31 @@ const [reg, setRegVisible] = useState(false);
 
 
 
-const handleLogin = () => {
- 
-  const err = authentication(email, password);
-  if (!err) {
-    setSuccessPopUp(true);
-  }else{
-    Alert.alert(err);
+const handleLogin = async () => {
+  try {
+    const errorMessage = await authentication(email, password); 
+    if (errorMessage) {
+      Alert.alert(errorMessage); 
+      return; 
+    }
+      setSuccessPopUp(true);
+  } catch (error) {
+    console.log('Error', 'Login Failed: ' + error.message); 
   }
 };
-    useEffect(() => {
-      if (successPopUp) {
-        const countTime = setTimeout(() => {
-          setSuccessPopUp(false);
-          close(); // Close the modal
-          navigation.replace('Home'); // Replace Login with Home (no back button)
-        }, 2500);
-  
-    
-        return () => clearTimeout(countTime);
-      }
-    }, [successPopUp]);
+
+useEffect(() => {
+  if (successPopUp) {
+    const countTime = setTimeout(() => {
+      setSuccessPopUp(false);
+      close(); 
+      navigation.replace('Home'); // replace Login with Home (no back button)
+    }, 2500);
+
+
+    return () => clearTimeout(countTime);
+  }
+}, [successPopUp]);
 
   return (
 <Modal visible={visible} onRequestClose={close} animationType="slide" transparent={true}>
@@ -75,8 +95,6 @@ const handleLogin = () => {
                 onChangeText={(text) => setPassword(text)}
               />
             </View>
-
-            {/** button */}
             <TouchableNativeFeedback onPress={()=>handleLogin()}>
             <View style={styles.normalLoginButton}>
                 <Text style={styles.WelcomeLoginButtonText}>Login</Text>

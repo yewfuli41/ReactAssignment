@@ -2,7 +2,7 @@ import sqlite3
 db = sqlite3.connect('database.sqlite')
 
 db.execute('''CREATE TABLE bookings(
-    booking_id integer PRIMARY KEY,
+    booking_id integer PRIMARY KEY AUTOINCREMENT,
     user_id integer,
     service text NOT NULL,
     dentistName text NOT NULL,
@@ -13,12 +13,12 @@ db.execute('''CREATE TABLE bookings(
     FOREIGN KEY (user_id) REFERENCES users(user_id)      
 )''')
 db.execute('''CREATE TABLE users(
-    user_id integer PRIMARY KEY,
+    user_id integer PRIMARY KEY AUTOINCREMENT,
     name text NOT NULL,
     dialingCode text NOT NULL,
-    phoneNumber integer NOT NULL,
+    phoneNumber text NOT NULL,
     email text NOT NULL,
-    password text NOT NULL,
+    password text NULL,
     gender text,
     birthDate date
 )''')

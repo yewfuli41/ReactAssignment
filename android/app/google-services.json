@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "628896047866",
+    "project_id": "reactassignment-ec36e",
+    "storage_bucket": "reactassignment-ec36e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628896047866:android:d28c6a7381933e01b01f43",
+        "android_client_info": {
+          "package_name": "com.navi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628896047866-rq8mba5m5glqei3egsnfg6htih107jsf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzK-8BlzHmRDUZ0Y-VjcdrtkNPXgdmots"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628896047866-rq8mba5m5glqei3egsnfg6htih107jsf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
