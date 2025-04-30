@@ -8,7 +8,6 @@ import {
     ScrollView,
     Platform
 } from "react-native";
-import { Directions } from "react-native-gesture-handler";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Types';
