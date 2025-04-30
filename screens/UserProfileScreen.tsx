@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     View,
     Text,
@@ -8,7 +8,7 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types';
 import style from './styleSheet';
-;
+import { ThemeContext } from '../context/ThemeContext';
 
 
 type UserProfileScreenProps = {
@@ -17,7 +17,7 @@ type UserProfileScreenProps = {
 
 const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
 
-    
+    const { theme } = useContext(ThemeContext);
     const [userData, setUserData] =useState(
         {
             //hardcode, later see what to do with database
@@ -29,15 +29,15 @@ const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
         }); 
 
     return (
-        <View style={style.container}>
-            <View style={style.profileImagePlaceholder}>
+        <View style={[style.container, {backgroundColor: theme.backgroundColor}]}>
+            <View style={[style.profileImagePlaceholder, {backgroundColor: theme.backgroundColor}]}>
                 <Text style={style.profileImagePlaceholderText}>
                     {userData.name.charAt(0)}
                 </Text>
             </View>
 
-            <Text style={style.userName}>{userData.name}</Text>
-            <Text style={style.userEmail}>{userData.email}</Text>
+            <Text style={[style.userName, {color:theme.textColor}]}>{userData.name}</Text>
+            <Text style={[style.userEmail, {color:theme.textColor}]}>{userData.email}</Text>
 
             <View style={style.optionsContainer}>
                 <TouchableOpacity

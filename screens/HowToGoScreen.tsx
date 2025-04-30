@@ -1,5 +1,5 @@
 import { DrawerActions, Link, useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
 import {
     View,
     Text,
@@ -13,17 +13,19 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../Types';
 import style from "./styleSheet";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { ThemeContext } from "../context/ThemeContext";
 
 type HowToGoScreenProps = {
     navigation: StackNavigationProp<RootStackParamList, 'HowToGo'>;
     route: RouteProp<RootStackParamList, 'HowToGo'>;
 };
 
-const HowToGoScreen = (props:any) => {
-   
-    const {name,route} = props;
-     const navigation = useNavigation();
-       
+const HowToGoScreen = (props: any) => {
+
+    const { name, route } = props;
+    const navigation = useNavigation();
+    const { theme } = useContext(ThemeContext);
+
 
     const clinicInfo = {
         //same as idk if can hardcode or need to use another file to store the info
@@ -32,7 +34,7 @@ const HowToGoScreen = (props:any) => {
         phone: "60-333-333>",
         email: " utar@gmail.com",
         hours: "24/7",
-        coordinates:{
+        coordinates: {
             latitude: 3.039722,
             longitude: 101.794167
         }
@@ -61,51 +63,51 @@ const HowToGoScreen = (props:any) => {
     };
 
     return (
-        <ScrollView style={style.editProfilecontainer}>
+        <ScrollView style={[style.editProfilecontainer, { backgroundColor: theme.backgroundColor }]}>
             <View style={style.section}>
-    
-                           <View style={{flexDirection:'row', flex:1  }}>
-                           <TouchableOpacity 
-                           style={{ marginLeft:0, alignSelf:'flex-start' }}
-                               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                                   <Ionicons name="menu" size={28} color="black" />
-                       </TouchableOpacity> 
-                       <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{ fontWeight: "bold", fontSize:24, justifyContent:'center'}}>How To Go</Text>
-                        </View>
-                       </View> 
-                     
+
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <TouchableOpacity
+                        style={{ marginLeft: 0, alignSelf: 'flex-start' }}
+                        onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+                        <Ionicons name="menu" size={28} color={theme.textColor} />
+                    </TouchableOpacity>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <Text style={{ fontWeight: "bold", fontSize: 24, justifyContent: 'center', color: theme.textColor }}>How To Go</Text>
+                    </View>
+                </View>
+
 
                 <View style={style.infoItem}>
-                    <Text style={style.infoLabel}>Phone:</Text>
+                    <Text style={[style.infoLabel, {color:theme.textColor}]}>Phone:</Text>
                     <TouchableOpacity onPress={openPhone}>
                         <Text style={style.infoValueLink}>{clinicInfo.phone}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={style.infoItem}>
-                    <Text style={style.infoLabel}>Email:</Text>
+                    <Text style={[style.infoLabel, {color:theme.textColor}]}>Email:</Text>
                     <TouchableOpacity onPress={openEmail}>
                         <Text style={style.infoValueLink}>{clinicInfo.email}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={style.infoItem}>
-                    <Text style={style.infoLabel}>Address:</Text>
+                    <Text style={[style.infoLabel, {color:theme.textColor}]}>Address:</Text>
                     <Text style={style.infoValueLink}>{clinicInfo.address}</Text>
                 </View>
 
                 <View style={style.infoItem}>
-                    <Text style={style.infoLabel}>Working Hours::</Text>
+                    <Text style={[style.infoLabel, {color:theme.textColor}]}>Working Hours::</Text>
                     <Text style={style.infoValueLink}>{clinicInfo.hours}</Text>
                 </View>
             </View>
 
             <View style={style.section}>
-                <Text style={style.sectionTitle}>Location</Text>
+                <Text style={[style.sectionTitle, {color:theme.textColor}]}>Location</Text>
 
                 <View style={style.mapPlaceholder}>
-                    <Text style ={style.mapPlaceholderText}>
+                    <Text style={style.mapPlaceholderText}>
                         put Map API here
                     </Text>
                     <Text style={style.mapPlaceholderSubText}>
@@ -121,18 +123,18 @@ const HowToGoScreen = (props:any) => {
             </View>
 
             <View style={style.section}>
-                <Text style={style.sectionTitle}>Transport</Text>
+                <Text style={[style.sectionTitle, {color:theme.textColor}]}>Transport</Text>
 
                 <View style={style.directionItem}>
-                    <Text style={style.directionTitle}>By Public Transport:</Text>
-                    <Text style={style.directionText}>
+                    <Text style={[style.directionTitle, {color:theme.textColor}]}>By Public Transport:</Text>
+                    <Text style={[style.directionText, {color:theme.textColor}]}>
                         - MRT Bukit Dukung {"\n"}
                         - Take T453 bus {"\n"}
                         - The clinic will be on your left
                     </Text>
                 </View>
             </View>
-            
+
         </ScrollView>
     )
 };

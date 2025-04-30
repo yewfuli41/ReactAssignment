@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     StyleSheet,
     View,
@@ -14,6 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import style from './styleSheet';
 import { useUser, ValidationErrors, validateUserData } from '../context/UserContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ThemeContext } from '../context/ThemeContext';
 let SQLite = require('react-native-sqlite-storage');
 
 type EditProfileScreenProps = {
@@ -37,6 +38,7 @@ const EditProfileScreen = (props: any) => {
     const [isFormValid, setIsFormValid] = useState(false);
     const nav = useNavigation();
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const { theme } = useContext(ThemeContext);
 
     let db = SQLite.openDatabase(
         { name: 'database.sqlite', createFromLocation: '~database.sqlite' },
@@ -54,7 +56,7 @@ const EditProfileScreen = (props: any) => {
         //setUserData(localUserData); // set data as localUserData
         const validationErrors = validateUserData(localUserData);
         setErrors(validationErrors); // set errors to validation errors
-        
+
         if (Object.keys(validationErrors).length === 0) {
            db.transaction((tx:any) => {
             tx.executeSql(`UPDATE users SET name = ?, email =?, phoneNumber =?, gender = ?, birthDate = ?
@@ -92,28 +94,28 @@ const EditProfileScreen = (props: any) => {
     };
 
     return (
-        <View style={style.editProfilecontainer}>
+        <View style={[style.editProfilecontainer, { backgroundColor: theme.backgroundColor }]}>
             <View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', }}>
                     <TouchableOpacity
                         style={{ marginLeft: -100, alignSelf: 'flex-start' }}
                         onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                        <Ionicons name="menu" size={28} color="black" />
-                    </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24 }}>Edit Profile</Text>
+                        <Ionicons name="menu" size={28} color={theme.textColor} />
+                    </TouchableOpacity><Text style={{ color: theme.textColor, fontWeight: "bold", fontSize: 24 }}>Edit Profile</Text>
                 </View>
 
                 <View style={style.formGroup}>
-                    <Text style={style.label}>Name</Text>
+                    <Text style={[style.label, {color:theme.textColor}]}>Name</Text>
                     <TextInput
-                        style={[style.input, errors.name ? style.inputError : null]}
+                        style={[style.input, {color: theme.textColor},errors.name ? style.inputError : null]}
                         value={localUserData.name}
                         onChangeText={(text) => handleChange('name', text)}
                     />
-                    {errors.name ? <Text style={style.errorText}>{errors.name}</Text> : null}
+                    {errors.name ? <Text style={[style.errorText, {color:theme.textColor}]}>{errors.name}</Text> : null}
                 </View>
 
                 <View style={style.formGroup}>
-                    <Text style={style.label}>Gender</Text>
+                    <Text style={[style.label, {color:theme.textColor}]}>Gender</Text>
                     <View style={style.radioGroup}>
                         <TouchableOpacity
                             style={style.radioButton}
@@ -122,7 +124,7 @@ const EditProfileScreen = (props: any) => {
                                 style.radio,
                                 localUserData.gender === "Male" && style.radioSelected
                             ]} />
-                            <Text style={style.radioLabel}>Male</Text>
+                            <Text style={[style.radioLabel, {color:theme.textColor}]}>Male</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -132,23 +134,23 @@ const EditProfileScreen = (props: any) => {
                                 style.radio,
                                 localUserData.gender === "Female" && style.radioSelected
                             ]} />
-                            <Text style={style.radioLabel}>Female</Text>
+                            <Text style={[style.radioLabel, {color:theme.textColor}]}>Female</Text>
                         </TouchableOpacity>
 
                     </View>
                 </View>
 
                 <View style={style.formGroup}>
-                    <Text style={style.label}>Date of Birth</Text>
+                    <Text style={[style.label, {color:theme.textColor}]}>Date of Birth</Text>
                     <TouchableOpacity
                         style={[style.input, errors.dateOfBirth ? style.inputError : null]}
                         onPress={() => setShowDatePicker(true)}
                     >
-                        <Text>{localUserData.dateOfBirth || "Select date"}</Text>
+                        <Text style={{color:theme.textColor}}>{localUserData.dateOfBirth || "Select date"}</Text>
                     </TouchableOpacity>
 
                     {errors.dateOfBirth && (
-                        <Text style={style.errorText}>{errors.dateOfBirth}</Text>
+                        <Text style={[style.errorText, {color: theme.textColor}]}>{errors.dateOfBirth}</Text>
                     )}
 
                     {showDatePicker && (
@@ -163,26 +165,26 @@ const EditProfileScreen = (props: any) => {
                 </View>
 
                 <View style={style.formGroup}>
-                    <Text style={style.label}>Email</Text>
+                    <Text style={[style.label, {color:theme.textColor}]}>Email</Text>
                     <TextInput
-                        style={[style.input, errors.email ? style.inputError : null]}
+                        style={[style.input, {color:theme.textColor}, errors.email ? style.inputError : null]}
                         value={localUserData.email}
                         onChangeText={(text) => handleChange('email', text)}
                         keyboardType="email-address"
                         autoCapitalize="none"
                     />
-                    {errors.email ? <Text style={style.errorText}>{errors.email}</Text> : null}
+                    {errors.email ? <Text style={[style.errorText, {color:theme.textColor}]}>{errors.email}</Text> : null}
                 </View>
 
                 <View style={style.formGroup}>
-                    <Text style={style.label}>Phone Number</Text>
+                    <Text style={[style.label, {color:theme.textColor}]}>Phone Number</Text>
                     <TextInput
-                        style={[style.input, errors.phoneNumber ? style.inputError : null]}
+                        style={[style.input, {color:theme.textColor}, errors.phoneNumber ? style.inputError : null]}
                         value={localUserData.phoneNumber}
                         onChangeText={(text) => handleChange('phoneNumber', text)}
                         keyboardType="phone-pad"
                     />
-                    {errors.phoneNumber ? <Text style={style.errorText}>{errors.phoneNumber}</Text> : null}
+                    {errors.phoneNumber ? <Text style={[style.errorText, {color:theme.textColor}]}>{errors.phoneNumber}</Text> : null}
                 </View>
 
                 <View style={style.buttonContainer}>
@@ -190,7 +192,7 @@ const EditProfileScreen = (props: any) => {
                         style={style.saveButton}
                         onPress={handleSave}
                     >
-                        <Text style={style.saveButtonText}>Save Changes</Text>
+                        <Text style={[style.saveButtonText, {color: theme.textColor}]}>Save Changes</Text>
                     </TouchableOpacity>
                 </View>
             </View>

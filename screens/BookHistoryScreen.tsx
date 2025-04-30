@@ -1,10 +1,11 @@
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { View, Text, FlatList, TouchableOpacity, ScrollView, Alert } from "react-native";
 import SwipeableScreen from "./SwipeNavigation";
 import styles from "./styleSheet";
 import { useFocusEffect, DrawerActions, useNavigation } from '@react-navigation/native';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { ThemeContext } from "../context/ThemeContext";
 
 type Booking = {
   booking_id: number;
@@ -26,24 +27,25 @@ type Booking = {
 // BookingItem component displays a single booking record.
 const BookingItem = ({ booking }: { booking: Booking }) => {
   const [expanded, setExpanded] = useState(false)
+  const { theme } = useContext(ThemeContext);
 
   return (
     <TouchableOpacity
       onPress={() => setExpanded(!expanded)}
-      style={styles.bookRecordsContainer}
+      style={[styles.bookRecordsContainer, { backgroundColor: theme.backgroundColor }]}
     >
       {/* Collapsed header view */}
-      <View style={styles.bookRecordHeader}>
-        <Text style={styles.bookRecordIndex}>{booking.booking_id}</Text>
-        <Text style={styles.bookRecordDate}>{booking.bookingDate}</Text>
+      <View style={[styles.bookRecordHeader, {backgroundColor: theme.backgroundColor}]}>
+        <Text style={[styles.bookRecordIndex, {color: theme.textColor}]}>{booking.booking_id}</Text>
+        <Text style={[styles.bookRecordDate,  {color: theme.textColor}]}>{booking.bookingDate}</Text>
       </View>
       {/* Expanded details view */}
       {expanded && (
-        <View style={styles.bookRecordDetails}>
-          <Text>Service: {booking.service}</Text>
-          <Text>Dentist: {booking.dentistName}</Text>
-          <Text>Time Slot: {booking.timeSlot}</Text>
-          <Text>Price: ${booking.amount}</Text>
+        <View style={[styles.bookRecordDetails, {backgroundColor: theme.backgroundColor}]}>
+          <Text style= {{color: theme.textColor}}>Service: {booking.service}</Text>
+          <Text style= {{color: theme.textColor}}>Dentist: {booking.dentistName}</Text>
+          <Text style= {{color: theme.textColor}}>Time Slot: {booking.timeSlot}</Text>
+          <Text style= {{color: theme.textColor}}>Price: ${booking.amount}</Text>
           {/* Add any additional booking details here */}
         </View>
       )}
@@ -57,6 +59,8 @@ const BookingItem = ({ booking }: { booking: Booking }) => {
 export const BookHistoryScreen = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const navigation = useNavigation();
+  const { theme } = useContext(ThemeContext);
+
   const _load = () => {
 
     let url = 'http://10.0.2.2:5000/api/bookings'
@@ -90,13 +94,13 @@ export const BookHistoryScreen = () => {
     <SwipeableScreen
       screenIndex={2}
       renderContent={() => (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
             <TouchableOpacity
-              style={{ position: 'absolute', left: -9, alignSelf: 'center' }}
+              style={{ position: 'absolute', left: 5, alignSelf: 'center' }}
               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-              <Ionicons name="menu" size={28} color="black" />
-            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Booking History</Text>
+              <Ionicons name="menu" size={28} color={theme.textColor} />
+            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24, color:theme.textColor}}> Booking History</Text>
           </View>
           <FlatList
             data={bookings}

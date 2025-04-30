@@ -31,6 +31,12 @@ const style = StyleSheet.create({
     padding: 20,
     backgroundColor: "#ffffff",
   },
+  themeSwitcher: {
+    padding:15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   section: {
     flex: 1,
     marginBottom: 30,
