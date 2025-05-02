@@ -74,6 +74,7 @@ def store():
     db.close()
 
     return jsonify(response), 201
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-p','--port',default=5000,type=int,help='port to listen on')
