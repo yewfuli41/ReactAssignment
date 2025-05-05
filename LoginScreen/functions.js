@@ -18,7 +18,7 @@ let db = SQLite.openDatabase(
     errorCallback,
 )
 
-const _getUserInfo = (email, password) => {
+export const _getUserInfo = (email, password) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(

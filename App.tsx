@@ -10,6 +10,7 @@ import { enableLayoutAnimations } from 'react-native-reanimated';
 import NavigationScreen from "./screens/ScreenNavigation";
 import { UserProvider } from './context/UserContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from "./context/AuthContext";
 enableScreens();
 enableLayoutAnimations(true);
 
@@ -17,18 +18,21 @@ const App = () => {
   const Stack = createStackNavigator();
 
   return (
-    <ThemeProvider>
-      <UserProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Preview" component={PreviewScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="LoginMain" component={WelcomeLogin} options={{ headerShown: false }} />
-            <Stack.Screen name="Home" component={NavigationScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} initialParams={{ name: "John" }} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </UserProvider>
-    </ThemeProvider>
+
+      <ThemeProvider>
+        <UserProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="Preview" component={PreviewScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="LoginMain" component={WelcomeLogin} options={{ headerShown: false }} />
+              <Stack.Screen name="Home" component={NavigationScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} initialParams={{ name: "John" }} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </UserProvider>
+      </ThemeProvider>
+
+
   );
 }
 

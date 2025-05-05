@@ -9,6 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types';
 import style from './styleSheet';
 import { ThemeContext } from '../context/ThemeContext';
+import { useUser } from '../context/UserContext';
 
 
 type UserProfileScreenProps = {
@@ -18,15 +19,7 @@ type UserProfileScreenProps = {
 const UserProfileScreen = ({ navigation }: UserProfileScreenProps) => {
 
     const { theme } = useContext(ThemeContext);
-    const [userData, setUserData] =useState(
-        {
-            //hardcode, later see what to do with database
-            name: 'John Doe',
-            email: 'john.doe@example.com',
-            dateOfBirth: "2000-01-01",
-            phoneNumber: "011-1213141",
-            gender: "Male",
-        }); 
+    const { userData, setUserData } = useUser();
 
     return (
         <View style={[style.container, {backgroundColor: theme.backgroundColor}]}>
