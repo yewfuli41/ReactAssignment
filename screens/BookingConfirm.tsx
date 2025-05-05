@@ -96,7 +96,7 @@ const App = ({ route, navigation }: Props) => {
         <View style={styles.nextButton}>
           <Button title="Book Now" color='#FF8F00' onPress={() => {
             if (paymentMethod) {
-              Alert.alert("", "Booking Successfully!", [
+              Alert.alert("", "Booking Successful!", [
                 {
                   text: "OK",
                   onPress: () => {

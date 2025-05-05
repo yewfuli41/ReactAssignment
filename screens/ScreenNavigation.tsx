@@ -27,10 +27,21 @@ import HowToGoScreen from "./HowToGoScreen";
 import FAQscreen from "./FAQScreen"; 
 import { useUser } from '../context/UserContext';
 import style from './styleSheet';
+import BookingUpdate from './UpdateBookHistory'; 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
 
+const BookingStack = createStackNavigator<RootStackParamList>();
+
+function BookingStackNavigator() {
+  return (
+    <BookingStack.Navigator screenOptions={{ headerShown: false }}>
+      <BookingStack.Screen name="BookingHistory" component={BookHistoryScreen} />
+      <BookingStack.Screen name="BookingUpdate" component={BookingUpdate} />
+    </BookingStack.Navigator>
+  );
+}
 
 const MyDrawerComponent = (props:any) => {
 
@@ -114,7 +125,7 @@ function MainTabs() {
       />
       <Tab.Screen
         name="Booking History"
-        component={BookHistoryScreen}
+        component={BookingStackNavigator} //nested stack navigator
         options={{
           headerShown: false,
           tabBarIcon: () => {
@@ -178,5 +189,7 @@ function MainTabs() {
       </GestureHandlerRootView>
     );
   };
+
+  
 
 export default NavigationScreen;

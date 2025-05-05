@@ -8,6 +8,7 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 type Props = StackScreenProps<RootStackParamList, 'BookingDetails'>;
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
 const App = ({ route, navigation }: Props) => {
   const options = [
     { id: 1, name: "Dr Lee Wei", description: "some description" },
