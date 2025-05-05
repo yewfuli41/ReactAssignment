@@ -22,6 +22,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ChatScreen from '../ChatFeature/ChatScreen';
 import { TouchableOpacity, Text, View, ImageBackground, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import UserProfileScreen from './UserProfileScreen';
 import EditProfileScreen from "./EditProfileScreen";
 import HowToGoScreen from "./HowToGoScreen";
 import FAQscreen from "./FAQScreen";
@@ -45,10 +46,12 @@ const MyDrawerComponent = (props: any) => {
     <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
       <DrawerContentScrollView {...props} contentContainerStyle={{ backgroundColor: theme.backgroundColor }}>
         <ImageBackground source={require('../img/pexels-photo-6502307.webp')} style={style.profileBackground}>
+          <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile')}>
           <Image
             style={style.profileImage}
             source={require('../img/pexels-photo-6502307.webp')}
           />
+          </TouchableOpacity>
           <Text style={[style.profileName, { color: theme.textColor }]}>
             {userData.name}
           </Text>
@@ -179,6 +182,10 @@ const NavigationScreen = () => {
           headerTintColor: 'red',
         }}
       >
+        <Drawer.Screen
+         name="UserProfile"
+         component={UserProfileScreen}
+        />
         <Drawer.Screen
           name="Main"
           component={MainTabs}
