@@ -1,12 +1,13 @@
 
-import React, { useState, useCallback } from "react";
-import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
+import React, { useState, useCallback, useContext } from "react";
+import { View, Text, FlatList, TouchableOpacity, ScrollView, Alert } from "react-native";
 import SwipeableScreen from "./SwipeNavigation";
 import { RootStackParamList } from '../Types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import styles from "./styleSheet";
 import { useFocusEffect, DrawerActions, useNavigation } from '@react-navigation/native';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { ThemeContext } from "../context/ThemeContext";
 
 type Booking = {
   booking_id: number;
@@ -28,16 +29,17 @@ const BookingItem = ({ booking, onDelete}: {
     }) => {
   const [expanded, setExpanded] = useState(false)
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  
+  const { theme } = useContext(ThemeContext);
+      
   return (
     <TouchableOpacity
       onPress={() => setExpanded(!expanded)}
-      style={styles.bookRecordsContainer}
+      style={[styles.bookRecordsContainer, { backgroundColor: theme.backgroundColor }]}
     >
       {/* Collapsed header view */}
-      <View style={styles.bookRecordHeader}>
-        <Text style={styles.bookRecordIndex}>{booking.booking_id}</Text>
-        <Text style={styles.bookRecordDate}>{booking.bookingDate}</Text>
+      <View style={[styles.bookRecordHeader, {backgroundColor: theme.backgroundColor}]}>
+        <Text style={[styles.bookRecordIndex, {color: theme.textColor}]}>{booking.booking_id}</Text>
+        <Text style={[styles.bookRecordDate,  {color: theme.textColor}]}>{booking.bookingDate}</Text>
       </View>
       {/* Expanded details view */}
       {expanded && (
@@ -66,7 +68,6 @@ const BookingItem = ({ booking, onDelete}: {
               <Text style={styles.update_delete_buttonText}>Delete</Text>
             </TouchableOpacity>
           </View>
-
         </View>
       )}
     </TouchableOpacity>
@@ -76,6 +77,8 @@ const BookingItem = ({ booking, onDelete}: {
 export const BookHistoryScreen = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const navigation = useNavigation();
+  const { theme } = useContext(ThemeContext);
+
   const _load = () => {
 
     let url = 'http://10.0.2.2:5000/api/bookings'
@@ -124,13 +127,13 @@ export const BookHistoryScreen = () => {
     <SwipeableScreen
       screenIndex={2}
       renderContent={() => (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
             <TouchableOpacity
               style={{ position: 'absolute', left: -1, alignSelf: 'center' }}
               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-              <Ionicons name="menu" size={28} color="black" />
-            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Booking History</Text>
+              <Ionicons name="menu" size={28} color={theme.textColor} />
+            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24, color:theme.textColor}}> Booking History</Text>
           </View>
           <FlatList
             data={bookings}

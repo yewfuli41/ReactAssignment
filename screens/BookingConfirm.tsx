@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import { View, Text, Button, Alert, TouchableOpacity } from 'react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types';
@@ -8,6 +8,8 @@ import { RadioButton } from "react-native-paper";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { DrawerActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ThemeContext } from '../context/ThemeContext';
+
 export type Props = StackScreenProps<RootStackParamList, 'BookingConfirm'>;
 
 const App = ({ route, navigation }: Props) => {
@@ -21,6 +23,7 @@ const App = ({ route, navigation }: Props) => {
   const { serviceName, dentistName, appointmentDate, timeSlot, calculateTotal } = route.params;
   const user = { name: "John Doe", phone: "011-1213141" }
   const totalAmount = calculateTotal ? calculateTotal(serviceName) : 0;
+  const {theme} = useContext(ThemeContext);
   const _save = () => {
     let url = 'http://10.0.2.2:5000/api/bookings'
     fetch(url, {
@@ -64,7 +67,7 @@ const App = ({ route, navigation }: Props) => {
           <TouchableOpacity
             style={{ position: 'absolute', left: 12, alignSelf: 'center' }}
             onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-            <Ionicons name="menu" size={28} color="black" />
+            <Ionicons name="menu" size={28} color={theme.textColor} />
           </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24 }}> Booking Confirmation</Text>
         </View>
 
