@@ -277,6 +277,7 @@ const style = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // booking history screen
   bookRecordsContainer: {
     alignSelf: "stretch",
     marginVertical: 5,
@@ -299,7 +300,28 @@ const style = StyleSheet.create({
   bookRecordDetails: {
     marginTop: 8,
   },
+  update_button: {
+    backgroundColor: '#00C297',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  delete_button: {
+    backgroundColor: 'red',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  update_delete_buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 
+  // Chatbox button
   chatButton: {
     color: '#15b5b0',
     fontSize: 45,

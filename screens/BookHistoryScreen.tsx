@@ -2,6 +2,8 @@
 import React, { useState, useCallback, useContext } from "react";
 import { View, Text, FlatList, TouchableOpacity, ScrollView, Alert } from "react-native";
 import SwipeableScreen from "./SwipeNavigation";
+import { RootStackParamList } from '../Types';
+import { StackNavigationProp } from '@react-navigation/stack';
 import styles from "./styleSheet";
 import { useFocusEffect, DrawerActions, useNavigation } from '@react-navigation/native';
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -15,20 +17,20 @@ type Booking = {
   bookingDate: string;
   timeSlot: string;
   amount: number;
+  paymentMethod: string;
 };
-//import SQLite from "react-native-sqlite-storage";
 
-// const db = SQLite.openDatabase(
-//   { name: "BookingDB", location: "default" },
-//   () => console.log("Database opened successfully"),
-//   error => console.log("Error opening database: ", error)
-// );
+/*add book icons to each record list*/
 
 // BookingItem component displays a single booking record.
-const BookingItem = ({ booking }: { booking: Booking }) => {
+const BookingItem = ({ booking, onDelete}: { 
+    booking: Booking;
+    onDelete: (id: number)=> void;
+    }) => {
   const [expanded, setExpanded] = useState(false)
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { theme } = useContext(ThemeContext);
-
+      
   return (
     <TouchableOpacity
       onPress={() => setExpanded(!expanded)}
@@ -41,20 +43,36 @@ const BookingItem = ({ booking }: { booking: Booking }) => {
       </View>
       {/* Expanded details view */}
       {expanded && (
-        <View style={[styles.bookRecordDetails, {backgroundColor: theme.backgroundColor}]}>
-          <Text style= {{color: theme.textColor}}>Service: {booking.service}</Text>
-          <Text style= {{color: theme.textColor}}>Dentist: {booking.dentistName}</Text>
-          <Text style= {{color: theme.textColor}}>Time Slot: {booking.timeSlot}</Text>
-          <Text style= {{color: theme.textColor}}>Price: ${booking.amount}</Text>
+        <View style={styles.bookRecordDetails}>
           {/* Add any additional booking details here */}
+          <Text>Service: {booking.service}</Text>
+          <Text>Dentist: {booking.dentistName}</Text>
+          <Text>Time Slot: {booking.timeSlot}</Text>
+          <Text>Price: ${booking.amount}</Text>
+          {/*Update and delete booking record button */}
+          <View style={{ flexDirection: "row", marginTop: 10 }}>
+            <TouchableOpacity onPress={() => 
+                  navigation.navigate("BookingUpdate", {
+                  bookingId: booking.booking_id,
+                  service: booking.service,
+                  dentistName: booking.dentistName,
+                  bookingDate: booking.bookingDate,
+                  timeSlot: booking.timeSlot,
+                  amount: booking.amount,
+                  paymentMethod: booking.paymentMethod
+                })} style={styles.update_button}>
+              <Text style={styles.update_delete_buttonText}>Modify</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => onDelete(booking.booking_id)} style={[styles.delete_button]}>
+              <Text style={styles.update_delete_buttonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
     </TouchableOpacity>
   );
 };
-
-
-
 
 export const BookHistoryScreen = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -85,11 +103,26 @@ export const BookHistoryScreen = () => {
         console.log(error)
       })
   }
+  const handleDelete = (id: number) => {
+    fetch(`http://10.0.2.2:5000/api/bookings/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Delete failed with status ${response.status}`);
+        // remove from local state
+        setBookings((prev) => prev.filter((b) => b.booking_id !== id));
+      })
+      .catch((err) => {
+        Alert.alert("Delete Failed", err.message);
+      });
+  };
+  
   useFocusEffect(
     useCallback(() => {
       _load();    // reload from server
     }, [])
   );
+
   return (
     <SwipeableScreen
       screenIndex={2}
@@ -97,7 +130,7 @@ export const BookHistoryScreen = () => {
         <View style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative', marginTop: 10 }}>
             <TouchableOpacity
-              style={{ position: 'absolute', left: 5, alignSelf: 'center' }}
+              style={{ position: 'absolute', left: -1, alignSelf: 'center' }}
               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
               <Ionicons name="menu" size={28} color={theme.textColor} />
             </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24, color:theme.textColor}}> Booking History</Text>
@@ -105,7 +138,11 @@ export const BookHistoryScreen = () => {
           <FlatList
             data={bookings}
             keyExtractor={(item) => item.booking_id.toString()}
-            renderItem={({ item }) => <BookingItem booking={item} />}
+            renderItem={({ item }) => 
+              <BookingItem 
+                booking={item}
+                onDelete={handleDelete}
+                />}
             contentContainerStyle={styles.bookRecordsContainer}
           />
           

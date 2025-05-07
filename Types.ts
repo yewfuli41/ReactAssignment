@@ -21,6 +21,16 @@ export type RootStackParamList = {
     timeSlot:string;
     calculateTotal:(serviceName:string)=>number
   };
+  BookingHistory: undefined;
+  BookingUpdate: {
+    bookingId: number;
+    service: string;
+    dentistName: string;
+    bookingDate: string;
+    timeSlot: string;
+    amount: number;
+    paymentMethod: string;
+  };
   LoginMain: undefined;
   Home: undefined;
  
