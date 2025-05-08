@@ -23,36 +23,48 @@ type Booking = {
 /*add book icons to each record list*/
 
 // BookingItem component displays a single booking record.
-const BookingItem = ({ booking, onDelete}: { 
-    booking: Booking;
-    onDelete: (id: number)=> void;
-    }) => {
-  const [expanded, setExpanded] = useState(false)
+const BookingItem = ({ booking, onDelete }: { 
+  booking: Booking;
+  onDelete: (id: number) => void;
+}) => {
+  const [expanded, setExpanded] = useState(false);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { theme } = useContext(ThemeContext);
-      
+
+  // Check if booking date has passed
+  const bookingDateObj = new Date(booking.bookingDate);
+  const now = new Date();
+  const isPast = bookingDateObj < new Date(now.toDateString()); // ignore time, just compare dates
+
+  // highlight background color for active or non active booking items
+  const bookRecordHighlight = {
+    backgroundColor: isPast ? theme.highlight.past : theme.highlight.active,
+    borderColor: isPast ? theme.highlightBorder.past : theme.highlightBorder.active,
+    borderWidth: 1,
+  };
+
   return (
     <TouchableOpacity
       onPress={() => setExpanded(!expanded)}
-      style={[styles.bookRecordsContainer, { backgroundColor: theme.backgroundColor }]}
+      style={[styles.bookRecordsContainer, bookRecordHighlight]}
     >
-      {/* Collapsed header view */}
-      <View style={[styles.bookRecordHeader, {backgroundColor: theme.backgroundColor}]}>
-        <Text style={[styles.bookRecordIndex, {color: theme.textColor}]}>{booking.booking_id}</Text>
-        <Text style={[styles.bookRecordDate,  {color: theme.textColor}]}>{booking.bookingDate}</Text>
+      <View style={[styles.bookRecordHeader, { backgroundColor: theme.backgroundColor }]}>
+        <Text style={[styles.bookRecordIndex, { color: theme.textColor }]}>{booking.booking_id}</Text>
+        <Text style={[styles.bookRecordDate, { color: theme.textColor }]}>{booking.bookingDate}</Text>
       </View>
-      {/* Expanded details view */}
+
       {expanded && (
         <View style={styles.bookRecordDetails}>
-          {/* Add any additional booking details here */}
           <Text>Service: {booking.service}</Text>
           <Text>Dentist: {booking.dentistName}</Text>
           <Text>Time Slot: {booking.timeSlot}</Text>
           <Text>Price: ${booking.amount}</Text>
-          {/*Update and delete booking record button */}
+
           <View style={{ flexDirection: "row", marginTop: 10 }}>
-            <TouchableOpacity onPress={() => 
-                  navigation.navigate("BookingUpdate", {
+            {/* Only allow modify if booking is upcoming */}
+            {!isPast && (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("BookingUpdate", {
                   bookingId: booking.booking_id,
                   service: booking.service,
                   dentistName: booking.dentistName,
@@ -60,11 +72,30 @@ const BookingItem = ({ booking, onDelete}: {
                   timeSlot: booking.timeSlot,
                   amount: booking.amount,
                   paymentMethod: booking.paymentMethod
-                })} style={styles.update_button}>
-              <Text style={styles.update_delete_buttonText}>Modify</Text>
-            </TouchableOpacity>
+                })}
+                style={styles.update_button}
+              >
+                <Text style={styles.update_delete_buttonText}>Modify</Text>
+              </TouchableOpacity>
+            )}
 
-            <TouchableOpacity onPress={() => onDelete(booking.booking_id)} style={[styles.delete_button]}>
+            {/* Always allow delete */}
+            <TouchableOpacity onPress={() => {
+            if (!isPast) {
+              // Active booking — show refund warning
+              Alert.alert(
+                "Warning",
+                "Deleting an active booking will not be refunded. Are you sure you want to proceed?",
+                [
+                  { text: "Cancel", style: "cancel" },
+                  { text: "Delete", style: "destructive", onPress: () => onDelete(booking.booking_id) }
+                ]
+              );
+            } else {
+              // Past booking — delete immediately
+              onDelete(booking.booking_id);
+            }}}
+            style={styles.delete_button}>
               <Text style={styles.update_delete_buttonText}>Delete</Text>
             </TouchableOpacity>
           </View>

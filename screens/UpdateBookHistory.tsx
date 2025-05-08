@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, Alert, Platform } from 'react-native';
+import { View, Text, Button, Alert, Platform, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../Types';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RadioButton } from 'react-native-paper';
+import { paymentMethods } from './paymentMethods'; 
 
 type Props = StackScreenProps<RootStackParamList, 'BookingUpdate'>;
 
@@ -27,12 +28,18 @@ const BookingUpdateScreen = ({ route, navigation }: Props) => {
     if (updatedService === "X-Ray") return 150;
     return 0;
   }
+  // toggle payment pop ups after user confirm update
+  const [modalVisible, setModalVisible] = useState(false);
 
+  // set updated values
   const [updatedService, setUpdatedService] = useState(service);
   const [updatedDentist, setUpdatedDentist] = useState(dentistName);
   const [updatedDate, setUpdatedDate] = useState(new Date(bookingDate));
   const [updatedTimeSlot, setUpdatedTimeSlot] = useState(timeSlot);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(paymentMethod);
+  const [tempSelectedPaymentMethod, setTempSelectedPaymentMethod] = useState(paymentMethod);
+  const [hasServiceChanged, setHasServiceChanged] = useState(false);
   const totalAmount = amount ? calculateTotal(updatedService) : 0;
 
   const handleUpdate = () => {
@@ -45,7 +52,7 @@ const BookingUpdateScreen = ({ route, navigation }: Props) => {
         bookingDate: updatedDate.toISOString().split('T')[0],
         timeSlot: updatedTimeSlot,
         amount: totalAmount,
-        paymentMethod: paymentMethod
+        paymentMethod: selectedPaymentMethod
       })
     })
       .then(response => {
@@ -61,6 +68,12 @@ const BookingUpdateScreen = ({ route, navigation }: Props) => {
         Alert.alert('Error', 'Failed to update booking.');
       });
   };
+
+  useEffect(() => {
+    if (modalVisible) {
+      setTempSelectedPaymentMethod(selectedPaymentMethod);
+    }
+  }, [modalVisible]);
 
   return (
     <View style={{ padding: 20 }}>
@@ -118,13 +131,93 @@ const BookingUpdateScreen = ({ route, navigation }: Props) => {
           </View>
         ))}
       </RadioButton.Group>
+      
+      {/* Payment pop up after change of services*/}
+      <Modal
+      visible={modalVisible}
+      transparent={true}
+      animationType="slide"
+      >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContainer}>
+          <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Choose Payment Method</Text>
+          <RadioButton.Group
+            onValueChange={(value) => setTempSelectedPaymentMethod(value)}
+            value={tempSelectedPaymentMethod}
+          >
+            {paymentMethods.map((method) => (
+              <View key={method.id} style={styles.radioRow}>
+                <Text>{method.method}</Text>
+                <RadioButton value={method.method} />
+              </View>
+            ))}
+          </RadioButton.Group>
+
+          <View style={{ marginTop: 10 }}>
+            <Button
+              title="Confirm"
+              color="#4CAF50"
+              onPress={() => {
+                setSelectedPaymentMethod(tempSelectedPaymentMethod);
+                setModalVisible(false);
+                handleUpdate(); // <--- Call update here
+              }}
+            />
+            <View style={{ height: 10 }} />
+            <Button
+              title="Cancel"
+              color="red"
+              onPress={() => setModalVisible(false)}
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
 
       {/* Update Button */}
-      <View style={{ marginTop: 20 }}>
-        <Button title="Update Booking" onPress={handleUpdate} />
-      </View>
+    <View style={{ marginTop: 20 }}>
+    <Button
+    title="Update Booking"
+    onPress={() => {
+        if (updatedService != service) {
+          // Prompt user to confirm payment if service changed
+          setModalVisible(true);
+        } else {
+          handleUpdate(); // Proceed directly
+        }}}
+      />
     </View>
+  </View>
   );
 };
+
+const styles = StyleSheet.create({
+  selectBox: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    padding: 10,
+    marginTop: 5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.13)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    elevation: 5
+  },
+  radioRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    alignItems: 'center'
+  }
+});
 
 export default BookingUpdateScreen;
