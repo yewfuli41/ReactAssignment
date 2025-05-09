@@ -10,7 +10,7 @@ import { enableLayoutAnimations } from 'react-native-reanimated';
 import NavigationScreen from "./screens/ScreenNavigation";
 import { UserProvider } from './context/UserContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { AuthProvider } from "./context/AuthContext";
+
 enableScreens();
 enableLayoutAnimations(true);
 

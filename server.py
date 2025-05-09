@@ -74,6 +74,54 @@ def store():
     db.close()
 
     return jsonify(response), 201
+
+    
+@app.route('/api/bookings/<int:booking_id>', methods=['DELETE'])
+def delete_booking(booking_id):
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM bookings WHERE booking_id = ?", (booking_id,))
+    db.commit()
+    affected = db.total_changes
+    db.close()
+
+    if affected == 0:
+        abort(404)
+    return jsonify({'deleted': booking_id, 'affected': affected}), 200
+
+
+@app.route('/api/bookings/<int:booking_id>', methods=['PUT'])
+def update_booking(booking_id):
+    if not request.json:
+        abort(400, description="Missing JSON body")
+
+    db = sqlite3.connect(DB)
+    cursor = db.cursor()
+    cursor.execute("SELECT COUNT(*) FROM bookings WHERE booking_id = ?", (booking_id,))
+    if cursor.fetchone()[0] == 0:
+        db.close()
+        abort(404)
+
+    cursor.execute('''
+        UPDATE bookings
+        SET service = ?, dentistName = ?, bookingDate = ?, timeSlot = ?, amount = ?, paymentMethod = ?
+        WHERE booking_id = ?
+    ''', (
+        request.json['service'],
+        request.json['dentistName'],
+        request.json['bookingDate'],
+        request.json['timeSlot'],
+        request.json['amount'],
+        request.json['paymentMethod'],
+        booking_id
+    ))
+
+    db.commit()
+    affected = db.total_changes
+    db.close()
+
+    return jsonify({'updated': booking_id, 'affected': affected}), 200
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-p','--port',default=5000,type=int,help='port to listen on')

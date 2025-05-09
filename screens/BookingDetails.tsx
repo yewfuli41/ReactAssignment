@@ -59,6 +59,7 @@ const App = ({ route, navigation }: Props) => {
           </View>
           {buttons.map((button, index) => (
             <View key={index}>
+
               <Text style={[styles.cardTitle, { color: theme.textColor }]}>{button.title}</Text>
               <Text style={[styles.cardDescription, { color: theme.textColor }]}>{button.description}</Text>
               
@@ -72,6 +73,7 @@ const App = ({ route, navigation }: Props) => {
                   >
                     <Text style={styles.bookNowButtonText}>Book Now</Text>
                 </TouchableOpacity>
+
             </View>))}
         </View>
       )

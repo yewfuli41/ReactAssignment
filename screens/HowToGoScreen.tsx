@@ -15,9 +15,7 @@ import { RootStackParamList } from '../Types';
 import style from "./styleSheet";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ThemeContext } from "../context/ThemeContext";
-import MapView, { Marker } from 'react-native-maps';
 import Geolocation from "@react-native-community/geolocation";
-import { createMapLink } from "react-native-open-maps";
 import WebView from "react-native-webview";
 
 type HowToGoScreenProps = {
@@ -64,11 +62,11 @@ const HowToGoScreen: React.FC<HowToGoScreenProps> = ({ navigation }) => {
     }, []);
 
     const clinicInfo = {
-        name: "Schneidermain Dental",
-        address: "Universiti Tunku Abdul Rahman (UTAR), Jalan Sungai Long",
-        phone: "+60-3-1234-5678",
-        email: "utar@gmail.com",
-        hours: "24/7",
+        name: "Pearl Dental",
+        address: "Pearl Dental, Lot 1, Jalan Sungai Long 2/2, Bandar Sungai Long, 43000 Kajang, Selangor",
+        phone: "+60-3125678",
+        email: "pearlDental@gmail.com",
+        hours: "Open from Monday to Saturday \n10am to 6pm \nSunday off",
         coordinates: {
             latitude: 3.039722,
             longitude: 101.794167
@@ -135,7 +133,7 @@ const HowToGoScreen: React.FC<HowToGoScreenProps> = ({ navigation }) => {
 
                 <View style={style.infoItem}>
                     <Text style={[style.infoLabel, { color: theme.textColor }]}>Working Hours:</Text>
-                    <Text style={style.infoValueLink}>{clinicInfo.hours}</Text>
+                    <Text style={[style.infoLabel, { color: theme.textColor }]}>{clinicInfo.hours}</Text>
                 </View>
             </View>
 
