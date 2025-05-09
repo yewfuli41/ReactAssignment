@@ -41,6 +41,7 @@ def index():
         bookings.append(booking)
 
     return jsonify(bookings),200
+
 @app.route('/api/bookings', methods=['POST'])
 def store():
     if not request.json:
