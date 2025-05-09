@@ -22,6 +22,7 @@ const App = ({ route, navigation }: Props) => {
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("");
   const [service, setService] = useState<string>("");
+  const [holidays, setHolidays] = useState<string[]>([]); // holiday checking
   const {theme} = useContext(ThemeContext);
 
   const timeSlots = [
@@ -35,17 +36,50 @@ const App = ({ route, navigation }: Props) => {
   ]
   const isoDate = date.toISOString().split("T")[0]
   const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowPicker(false);
-    if (selectedDate) {
-      const today = new Date();
-      if (selectedDate < today) {
-        Alert.alert("Invalid Date", "You cannot select a date before today.");
-        setDate(today);
-      } else {
-        setDate(selectedDate);
-      }
-    }
+  setShowPicker(false);
+  if (selectedDate) {
+    const today = new Date();
+    const selectedIsoDate = selectedDate.toISOString().split("T")[0]; // Format selected date to YYYY-MM-DD
+
+    // Check if the selected date is in the past
+    if (selectedDate < today) {
+      Alert.alert("Invalid Date", "You cannot select a date before today.");
+      setDate(today); // Optionally reset to today's date
+    } 
+    // Check if the selected date is a holiday
+    else if (holidays.includes(selectedIsoDate)) {
+      Alert.alert("Holiday", "The selected date is a public holiday. Please choose another date.");
+      setDate(today); // Optionally reset to today's date or another default
+      console.log("Selected ISO date:", selectedIsoDate, "Is holiday?", holidays.includes(selectedIsoDate));
+    } 
+    // Valid date that is not a holiday
+    else {
+      setDate(selectedDate);
+    }}
   };
+
+  useEffect(() => {
+  const fetchHolidays = async () => {
+    try {
+    const response = await fetch("https://openholidaysapi.org/PublicHolidays?countryIsoCode=DE&languageIsoCode=EN&validFrom=2024-01-01&validTo=2024-12-31");
+    const data = await response.json();
+    console.log("Fetched holidays:", data);
+
+    if (Array.isArray(data)) {
+      const holidayDates = data.map(holiday => holiday.startDate);
+      console.log("Holiday startDates:", holidayDates);
+      setHolidays(holidayDates);  // Make sure to use this correctly
+    } else {
+      throw new Error("Unexpected response structure");
+    }
+  } catch (error) {
+    console.error("Failed to fetch holidays:", error);
+  }
+  };
+
+  fetchHolidays();
+  }, []);
+
   return (
     <>
       {currentStep === "selectService" && (
