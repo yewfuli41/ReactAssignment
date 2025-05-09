@@ -8,7 +8,7 @@ import styles from "./styleSheet";
 import { useFocusEffect, DrawerActions, useNavigation } from '@react-navigation/native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { ThemeContext } from "../context/ThemeContext";
-
+import { useUser } from "../context/UserContext";
 type Booking = {
   booking_id: number;
   user_id: number;
@@ -23,7 +23,7 @@ type Booking = {
 /*add book icons to each record list*/
 
 // BookingItem component displays a single booking record.
-const BookingItem = ({ booking, onDelete }: { 
+const BookingItem = ({ booking, onDelete }: {
   booking: Booking;
   onDelete: (id: number) => void;
 }) => {
@@ -81,21 +81,22 @@ const BookingItem = ({ booking, onDelete }: {
 
             {/* Always allow delete */}
             <TouchableOpacity onPress={() => {
-            if (!isPast) {
-              // Active booking — show refund warning
-              Alert.alert(
-                "Warning",
-                "Deleting an active booking will not be refunded. Are you sure you want to proceed?",
-                [
-                  { text: "Cancel", style: "cancel" },
-                  { text: "Delete", style: "destructive", onPress: () => onDelete(booking.booking_id) }
-                ]
-              );
-            } else {
-              // Past booking — delete immediately
-              onDelete(booking.booking_id);
-            }}}
-            style={styles.delete_button}>
+              if (!isPast) {
+                // Active booking — show refund warning
+                Alert.alert(
+                  "Warning",
+                  "Deleting an active booking will not be refunded. Are you sure you want to proceed?",
+                  [
+                    { text: "Cancel", style: "cancel" },
+                    { text: "Delete", style: "destructive", onPress: () => onDelete(booking.booking_id) }
+                  ]
+                );
+              } else {
+                // Past booking — delete immediately
+                onDelete(booking.booking_id);
+              }
+            }}
+              style={styles.delete_button}>
               <Text style={styles.update_delete_buttonText}>Delete</Text>
             </TouchableOpacity>
           </View>
@@ -109,31 +110,9 @@ export const BookHistoryScreen = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const navigation = useNavigation();
   const { theme } = useContext(ThemeContext);
-
-  const _load = () => {
-
-    let url = 'http://10.0.2.2:5000/api/bookings'
-    fetch(url, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          Alert.alert('Error:', response.status.toString())
-          throw Error('Error:' + response.status)
-        }
-        return response.json().catch(err => Promise.reject('Failed to parse JSON'))
-      })
-      .then(booking => {
-        setBookings(booking)
-      }
-      )
-      .catch(error => {
-        console.log(error)
-      })
-  }
+  const { userData } = useUser(); // Get the logged-in user's details
+  const userName = userData?.name; // Use the user's name
+ 
   const handleDelete = (id: number) => {
     fetch(`http://10.0.2.2:5000/api/bookings/${id}`, {
       method: "DELETE",
@@ -147,10 +126,31 @@ export const BookHistoryScreen = () => {
         Alert.alert("Delete Failed", err.message);
       });
   };
-  
+  const fetchBookings = async () => {
+    if (!userName) return;
+
+    try {
+      const response = await fetch(`http://10.0.2.2:5000/api/bookings?name=${encodeURIComponent(userName)}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setBookings(data);
+      console.log("Bookings:", bookings);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    }
+  };
   useFocusEffect(
     useCallback(() => {
-      _load();    // reload from server
+      fetchBookings();    // reload from server
     }, [])
   );
 
@@ -164,19 +164,19 @@ export const BookHistoryScreen = () => {
               style={{ position: 'absolute', left: -1, alignSelf: 'center' }}
               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
               <Ionicons name="menu" size={28} color={theme.textColor} />
-            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24, color:theme.textColor}}> Booking History</Text>
+            </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize: 24, color: theme.textColor }}> Booking History</Text>
           </View>
           <FlatList
             data={bookings}
             keyExtractor={(item) => item.booking_id.toString()}
-            renderItem={({ item }) => 
-              <BookingItem 
+            renderItem={({ item }) =>
+              <BookingItem
                 booking={item}
                 onDelete={handleDelete}
-                />}
+              />}
             contentContainerStyle={styles.bookRecordsContainer}
           />
-          
+
         </View>
       )}
     />

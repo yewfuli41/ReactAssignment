@@ -10,7 +10,7 @@
   import AsyncStorage from '@react-native-async-storage/async-storage';
   import { ThemeContext } from '../context/ThemeContext';
   import { paymentMethods } from './paymentMethods';
-
+  import { useUser } from "../context/UserContext";
   export type Props = StackScreenProps<RootStackParamList, 'BookingConfirm'>;
 
   const App = ({ route, navigation }: Props) => {
@@ -19,6 +19,8 @@
     const user = { name: "John Doe", phone: "011-1213141" }
     const totalAmount = calculateTotal ? calculateTotal(serviceName) : 0;
     const {theme} = useContext(ThemeContext);
+    const { userData } = useUser(); // Get the logged-in user's details
+    const userName = userData?.name; // Use the user's name
     const _save = () => {
       let url = 'http://10.0.2.2:5000/api/bookings'
       fetch(url, {
@@ -29,6 +31,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          name:userName,
           service: serviceName,
           dentistName: dentistName,
           bookingDate: appointmentDate,

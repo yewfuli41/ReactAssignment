@@ -23,13 +23,16 @@ CORS(app)
 
 @app.route('/api/bookings',methods=['GET'])
 def index():
+    user_name = request.args.get('name')  # Get the user's name from the query parameter
+    if not user_name:
+        abort(400, description="Missing 'name' query parameter")
     db = sqlite3.connect(DB)
     cursor = db.cursor()
     cursor.execute('''
     SELECT bookings.* FROM bookings
     JOIN users ON bookings.user_id = users.user_id
-    WHERE users.name = "John Doe"
-''')
+    WHERE users.name = ?
+''',(user_name,))
     rows = cursor.fetchall()
     db.close()
     bookings=[]
@@ -41,13 +44,19 @@ def index():
 @app.route('/api/bookings', methods=['POST'])
 def store():
     if not request.json:
-        abort(404)
-   
+        abort(400, description="Missing JSON body")
+    user_name = request.json.get('name')  # Get the user's name from the query parameter
+    if not user_name:
+        abort(400, description="Missing 'name' query parameter")
 
     db = sqlite3.connect(DB)
     cursor = db.cursor()
-    cursor.execute('''SELECT user_id FROM users WHERE name = "John Doe"''')
-    user_id = cursor.fetchone()[0]  
+    cursor.execute('SELECT user_id FROM users WHERE name = ?',(user_name,))
+    user = cursor.fetchone()
+    if not user:
+        db.close()
+        abort(404, description="User not found")
+    user_id = user[0]
     new_booking = (
         user_id,
         request.json['service'],
