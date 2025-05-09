@@ -62,7 +62,7 @@ const App = ({ route, navigation }: Props) => {
               <Text style={{color:theme.textColor}}>{button.title}</Text>
               <Text style={{color:theme.textColor}}>{button.description}</Text>
               <Button
-                color='#FF8F00'
+                color='#2ecec9'
                 title="Book Now"
                 onPress={() => {
                   setService(button.title);

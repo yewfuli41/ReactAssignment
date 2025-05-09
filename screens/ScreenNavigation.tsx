@@ -28,7 +28,7 @@ import HowToGoScreen from "./HowToGoScreen";
 import FAQscreen from "./FAQScreen";
 import { useUser } from '../context/UserContext';
 import style from './styleSheet';
-import BookingUpdate from './UpdateBookHistory'; 
+import BookingUpdate from './UpdateBookHistory';
 import { ThemeContext, ThemeProvider } from '../context/ThemeContext';
 
 const Tab = createBottomTabNavigator();
@@ -58,10 +58,10 @@ const MyDrawerComponent = (props: any) => {
       <DrawerContentScrollView {...props} contentContainerStyle={{ backgroundColor: theme.backgroundColor }}>
         <ImageBackground source={require('../img/pexels-photo-6502307.webp')} style={style.profileBackground}>
           <TouchableOpacity onPress={() => props.navigation.navigate('UserProfile')}>
-          <Image
-            style={style.profileImage}
-            source={require('../img/pexels-photo-6502307.webp')}
-          />
+            <Image
+              style={style.profileImage}
+              source={require('../img/pexels-photo-6502307.webp')}
+            />
           </TouchableOpacity>
           <Text style={[style.profileName, { color: theme.textColor }]}>
             {userData.name}
@@ -83,8 +83,8 @@ const MyDrawerComponent = (props: any) => {
             resetTheme();
             Alert.alert('Theme Reset', 'Theme has been reset to default.');
           }}
-        >      
-            <Text style={{ color: theme.textColor }}>Reset Theme</Text>
+        >
+          <Text style={{ color: theme.textColor }}>Reset Theme</Text>
         </TouchableOpacity>
 
       </DrawerContentScrollView>
@@ -119,10 +119,10 @@ function MainTabs() {
       initialRouteName={'Home'}
       screenOptions={{
         tabBarActiveTintColor: '#e91e63',
-        tabBarActiveBackgroundColor: 'pink',
+        tabBarActiveBackgroundColor: '#008080',
         tabBarInactiveBackgroundColor: theme.backgroundColor,
         tabBarLabelStyle: {
-          fontSize: 16,
+          fontSize: 12,
           color: theme.textColor,
         },
         tabBarStyle: {
@@ -137,8 +137,13 @@ function MainTabs() {
         options={{
           headerShown: false,
           tabBarIcon: () => {
-            return <Ionicons name="home" size={25} color={'orange'} />;
+            return <Ionicons name="home" size={25} color={'#2ecec9'} />;
           },
+          tabBarLabel:({focused}) => (
+            <Text style={{ color: focused ? 'white' : theme.textColor, fontSize: 12 }}>
+              Home
+            </Text>
+          )
         }}
       />
       <Tab.Screen
@@ -147,8 +152,13 @@ function MainTabs() {
         options={{
           headerShown: false,
           tabBarIcon: () => {
-            return <Ionicons name="medkit" size={25} color={'orange'} />;
+            return <Ionicons name="medkit" size={25} color={'#2ecec9'} />;
           },
+          tabBarLabel:({focused}) => (
+            <Text style={{ color: focused ? 'white' : theme.textColor, fontSize: 12 }}>
+              Service
+            </Text>
+          )
         }}
       />
       <Tab.Screen
@@ -157,8 +167,13 @@ function MainTabs() {
         options={{
           headerShown: false,
           tabBarIcon: () => {
-            return <Ionicons name="calendar" size={25} color={'orange'} />;
+            return <Ionicons name="calendar" size={25} color={'#2ecec9'} />;
           },
+          tabBarLabel:({focused}) => (
+            <Text style={{ color: focused ? 'white' : theme.textColor, fontSize: 12 }}>
+              Booking History
+            </Text>
+          )
         }}
       />
       <Tab.Screen
@@ -167,8 +182,13 @@ function MainTabs() {
         options={{
           headerShown: false,
           tabBarIcon: () => {
-            return <Ionicons name="chatbox-ellipses" size={25} color={'orange'} />;
+            return <Ionicons name="chatbox-ellipses" size={25} color={'#2ecec9'} />;
           },
+          tabBarLabel:({focused}) => (
+            <Text style={{ color: focused ? 'white' : theme.textColor, fontSize: 12 }}>
+              Chat
+            </Text>
+          )
         }}
       />
     </Tab.Navigator>
@@ -187,20 +207,22 @@ const NavigationScreen = () => {
         drawerContent={props => <MyDrawerComponent {...props} />}
         screenOptions={{
           drawerActiveTintColor: theme.textColor,
-          drawerActiveBackgroundColor: '#15b5b0',
+          drawerActiveBackgroundColor: '#2ecec9',
           drawerLabelStyle: { marginLeft: 0 },
           headerShown: false,
           headerTintColor: 'red',
         }}
       >
-        <Drawer.Screen
-         name="UserProfile"
-         component={UserProfileScreen}
-        />
+
         <Drawer.Screen
           name="Main"
           component={MainTabs}
           options={{ drawerLabel: 'Home' }}
+        />
+
+        <Drawer.Screen
+          name="UserProfile"
+          component={UserProfileScreen}
         />
         <Drawer.Screen
           name="EditProfile"
@@ -224,6 +246,6 @@ const NavigationScreen = () => {
   );
 };
 
-  
+
 
 export default NavigationScreen;

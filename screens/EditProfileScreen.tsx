@@ -81,7 +81,7 @@ const EditProfileScreen = (props: any) => {
                 )
             })
         } else {
-            Alert.alert("Validation Error", "Please fix the errors");
+            Alert.alert("Input Error", "Please enter valid details");
             console.log("Validation Error", validationErrors);
         }
     };
