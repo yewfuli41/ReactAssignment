@@ -12,9 +12,9 @@ import { ThemeContext } from "../context/ThemeContext";
 
 const App = ({ route, navigation }: Props) => {
   const options = [
-    { id: 1, name: "Dr Lee Wei", description: "some description" },
-    { id: 2, name: "Dr Micheal Thompson", description: "some description" },
-    { id: 3, name: "Dr Muhammad Faizal Ismail", description: "some description" },
+    { id: 1, name: "Dr Lee Wei", speciality: "Speciality: General Dentistry, Cosmetic Dentistry", experience:"Experience: 12 years" },
+    { id: 2, name: "Dr Micheal Thompson", speciality: "Speciality: Orthodontics, Pediatric Dentistry", experience: "Experience: 8 years" },
+    { id: 3, name: "Dr Muhammad Faizal Ismail", speciality: "Speciality: Endodontics, Root Canal Therapy", experience: "Experience: 9 years" },
   ];
   const [dentist, setDentist] = useState<string>("");
   const [currentStep, setCurrentStep] = useState<"selectService" | "selectDentist" | "selectDateTime">("selectService");
@@ -29,9 +29,9 @@ const App = ({ route, navigation }: Props) => {
     { id: 2, startTime: "3:30 PM", endTime: "5:00 PM" },
     { id: 3, startTime: "5:30 PM", endTime: "7:00 PM" }
   ]
-  const buttons = [{ title: "Dental Consultation", description: "some description" },
-  { title: "Scaling", description: "some description" },
-  { title: "X-Ray", description: "some description" },
+  const buttons = [{ title: "Dental Consultation", description: "Routine check-ups or specific dental concerns. "},
+  { title: "Scaling", description: "Removing plaque and tartar build-up" },
+  { title: "X-Ray", description: "Advanced imaging technique to view oral environment" },
   ]
   const isoDate = date.toISOString().split("T")[0]
   const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -59,16 +59,19 @@ const App = ({ route, navigation }: Props) => {
           </View>
           {buttons.map((button, index) => (
             <View key={index}>
-              <Text style={{color:theme.textColor}}>{button.title}</Text>
-              <Text style={{color:theme.textColor}}>{button.description}</Text>
-              <Button
-                color='#FF8F00'
-                title="Book Now"
-                onPress={() => {
-                  setService(button.title);
-                  setCurrentStep("selectDentist");
-                }}
-              />
+              <Text style={[styles.cardTitle, { color: theme.textColor }]}>{button.title}</Text>
+              <Text style={[styles.cardDescription, { color: theme.textColor }]}>{button.description}</Text>
+              
+                <TouchableOpacity
+                    style={[styles.bookNowButton, { backgroundColor: '#FF8F00' }]}
+                    onPress={() => {
+                      setService(button.title);
+                      setCurrentStep("selectDentist");
+                    }}
+                    activeOpacity={0.9}
+                  >
+                    <Text style={styles.bookNowButtonText}>Book Now</Text>
+                </TouchableOpacity>
             </View>))}
         </View>
       )
@@ -89,7 +92,8 @@ const App = ({ route, navigation }: Props) => {
                 <View key={option.id} style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10 }}>
                   <View style={{ flexDirection: "column" }}>
                     <Text>{option.name}</Text>
-                    <Text>{option.description}</Text>
+                    <Text>{option.speciality}</Text>
+                    <Text>{option.experience}</Text>
                   </View>
                   <RadioButton value={option.name} />
                 </View>

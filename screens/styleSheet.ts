@@ -328,5 +328,46 @@ const style = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: 'grey',
   },
+  card: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 16,
+    marginVertical: 8,
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3, // For Android shadow
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+    alignSelf:"center"
+  },
+  cardDescription: {
+    fontSize: 14,
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  bookNowButton: {
+    paddingVertical: 12,
+    marginBottom: 16,
+    alignSelf: "center", // Center horizontally
+    width: 100, // Fixed width
+    height: 50, // Fixed height
+    backgroundColor: "#FF8F00", // Button color
+    borderRadius: 8, // Rounded corners
+    justifyContent: "center", // Center text vertically
+    alignItems: "center", // Center text horizontally
+  },
+  bookNowButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 })
 export default style;
