@@ -1,78 +1,132 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity,ToastAndroid } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from './ChatDesign';
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import ChatBotOpts from './ChatBotOpts.json';
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import SwipeableScreen from '../screens/SwipeNavigation';
+import io from 'socket.io-client';
+import { useUser } from '../context/UserContext';
+
 /**main references:
  * 1. https://youtu.be/bGGeD5RkdzQ?si=-q6VQxjBIOb97BvO by Pradip Debnath 
  * 2. https://www.npmjs.com/package/react-native-gifted-chat 
  * 3. quick replies from useEffect: https://stackoverflow.com/questions/61891106/quick-replies-press-function-gifted-chat-react-native 
 */
 
-const ChatScreen = ({ route = { params: {} } }) => {
-    const { name = "User" } = route.params || {}; //  to "User" if name is undefined
+const ChatScreen = () => {
+    const { userData } = useUser(); 
+    const username = userData?.name || "User"; 
     const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
-    const [opt, setOptions] = useState(ChatBotOpts);
+    const [socket, setSocket] = useState(null);
    
+   console.log("username", username);
     useEffect(() => {
-        setMessages([
-            // one {} in blue means 1 reply/send
-            { //  1st send
-                _id: 1, 
-                text: `Hey ${name} 😃 I am Pearly Bot.`, // greet msg
-                createdAt: new Date(), // date of chat
-                // by who: by user id 2 with  name Pearly Bot
-                user: {  
-                    _id: 2, 
-                    name: 'Pearly Bot',
-                },
+       const socket_1 = io('http://10.0.2.2:5001/chat' ,
+          { transports: ['websocket'],
+            reconnection: true
+       });
+
+       setSocket(socket_1);
+
+       socket_1.on('connect', () => {
+        socket_1.emit('join_chat', { username });
+        ToastAndroid.show('Connected to server!', ToastAndroid.SHORT);
+      });
+    
+       socket_1.on('new_message',(msg) =>{
+        setMessages(prev => GiftedChat.append(prev,[{
+            _id:new Date().getTime(),
+            text:msg.message,
+            createdAt:new Date(msg.timestamp),
+            user: {
+                _id: msg.sender === 'Pearly'? 2:3, // Pearly id is 2, other's is 3
+                name: msg.sender,
             },
 
-        ])
-    }, [])
+        }]));
 
-    /** use call back because: 
-     * no need recreate function everytime component re-render, if yes then performance drop
-    */
-    // pass msg as an array
-    const onSend = useCallback((messages = []) => {
-        const selectedMessage = messages[0];  // read 1st msg
-    
-        // check the selectedMessage is from the quickReply or not
-        if (selectedMessage.quickReply) {
-            const selectedOption = options
-                .flatMap(opt => opt.subOptions || [])  // get sub-options
-                .find(subOpt => subOpt.id === selectedMessage.quickReply.value);  // find selected one
-    
-            // selected option is found, append it as a bot response else just add it into chat
-            if (selectedOption) {
-                setMessages(previousMessages =>
-                    GiftedChat.append(previousMessages, [
-                        {
-                            _id: new Date().getTime(),
-                            text: selectedOption.text,
-                            createdAt: new Date(),
-                            user: {
-                                _id: 2, // Bot's ID
-                                name: 'Pearly Bot',
-                            },
-                        },
-                    ])
-                );
-            }
-        } else {
-            setMessages(previousMessages =>
-                GiftedChat.append(previousMessages, messages)
-            );
+       });
+
+       //user joined
+       socket_1.on('user_joined',(data) =>{
+        setMessages(prev => GiftedChat.append(prev,[{
+            _id: new Date().getTime(),
+            text: `${data.username} joined the chat`,
+            createdAt: new Date(),
+            system: true,
+        }]));
+       });
+
+       //inactive
+       socket_1.on('inactive_warning',(data) =>{
+        ToastAndroid.show(data.message, ToastAndroid.LONG);
+       });
+       //inactive disconnect
+       socket_1.on('inactive_disconnect', (data) => {
+        ToastAndroid.show(data.message, ToastAndroid.LONG);
+    });
+
+       // end chat
+       socket_1.on('chat_ended',(data) =>{
+        ToastAndroid.show(data.message, ToastAndroid.LONG);
+       });
+
+       // set very first message
+    setMessages([{
+     _id: 1,
+     text: `Hi ${username}, How can I help you? `,
+     createdAt: new Date().getTime(),
+     user: {
+         _id: 2,
+         name: 'Pearly',
+     },
+    }]);
+      
+    return ()=>{
+        if(socket_1){
+            socket_1.emit('end_chat');
+            socket_1.disconnect();
         }
-    }, []);  
+    }
+
+    }, [username])
+
+ 
+
+      const pearlyReply = (messages=[])=>{
+        if(messages.length > 0 && socket){
+            socket.emit('new_message',{
+                message: messages[0].text,
+                sender: username,
+                user:{
+                    _id: 2,
+                    name: 'Pearly',
+                }
+            });
+        }
+        setMessages(previousMessages => GiftedChat.append(previousMessages, [pearlyReply]));
+        };
+
+
+     const onSend = (messages = []) => {
+        if (messages.length > 0 && socket) {
+            socket.emit('new_message', {
+                message: messages[0].text,
+                sender: username,
+            });
+           
+        }
+    };
+           
+
+
+
+
     const renderBubble = (props) => {
-        const { currentMessage } = props;
+   
     
         return (
             <View>
@@ -83,44 +137,10 @@ const ChatScreen = ({ route = { params: {} } }) => {
                         left: { backgroundColor: 'rgba(123, 255, 255, 0.7)' },
                     }}
                 />
-    
-    
-    {currentMessage.quickReplies && (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 5 }}>
-                        {currentMessage.quickReplies.values.map((option, index) => (
-            <TouchableOpacity 
-                key={index}
-                style={styles.optionsContainer} 
-                                onPress={() => handleQuickReply(option.value)}
-            >
-                                <Text style={styles.optionText}>{option.title}</Text>
-            </TouchableOpacity>
-        ))}
-    </View>
-)}
             </View>
         );
     };
 
-    const handleQuickReply = (value) => {
-        const selectedOption = opt.flatMap(opt => opt.subOptions || []).find(subOpt => subOpt.id === value);
-    
-        if (selectedOption) {
-            setMessages(previousMessages =>
-                GiftedChat.append(previousMessages, [
-                    {
-                        _id: new Date().getTime(),
-                        text: selectedOption.text,
-                        createdAt: new Date(),
-                        user: {
-                            _id: 2, // Bot's ID
-                            name: 'Pearly Bot',
-                        },
-                    },
-                ])
-            );
-        }
-    };
 
     return (
         <SwipeableScreen
@@ -131,22 +151,26 @@ const ChatScreen = ({ route = { params: {} } }) => {
                 <View style={[styles.headerContainer, { flexDirection: "row" }]}> 
                      
                 <View style={styles.container}>
-    <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',  width: '100%', position: 'relative' }}>
+                <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',  width: '100%', position: 'relative' }}>
                        <TouchableOpacity 
-                       style={{  position: 'absolute', left: 16, alignSelf: 'center', marginSTop:10 }} 
+                            style={{  position: 'absolute', left: 16, alignSelf: 'center', marginSTop:10 }} 
                            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
-                               <Ionicons name="menu" size={28} color="black" />
-                   </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Pearly Live Chat</Text>
-    </View>
-    </View>
+                        <Ionicons name="menu" size={28} color="black" />
+                        </TouchableOpacity><Text style={{ fontWeight: "bold", fontSize:24}}> Pearly Live Chat</Text>
                 </View>
+                </View>
+                </View>
+
+               
                
                 <GiftedChat
                     messages={messages}
                     onSend={messages => onSend(messages)}
+                  
                     alwaysShowSend
                     user={{
-                        _id: 1,
+                        _id: 3,
+                         name: username
                     }}
                     renderBubble={renderBubble}
                     renderAvatarOnTop

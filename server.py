@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 from argparse import ArgumentParser
 
+
 DB = 'android/app/src/main/assets/database.sqlite'
 
 def get_booking(row):
