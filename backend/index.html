@@ -12,8 +12,6 @@
             });
 
             socket.on('user_joined',(data) =>{
-                
-
                socket.on('new_message', function(msg) {
                 const chatroom = document.getElementById('chatroom');
                 const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
