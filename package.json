@@ -43,11 +43,7 @@
     "react-native-sqlite-storage": "^6.0.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-webview": "^13.13.5",
-<<<<<<< HEAD
     "socket.io-client": "^4.8.1"
-=======
-    "socket.io": "^4.8.1"
->>>>>>> 6f28613a0474a34d2b77529c6f478a2a4ca54722
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

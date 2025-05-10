@@ -1,13 +1,14 @@
 import { View, Text, TouchableOpacity,ToastAndroid } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from './ChatDesign';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext} from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import SwipeableScreen from '../screens/SwipeNavigation';
 import io from 'socket.io-client';
 import { useUser } from '../context/UserContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 /**main references:
  * 1. https://youtu.be/bGGeD5RkdzQ?si=-q6VQxjBIOb97BvO by Pradip Debnath 
@@ -21,6 +22,7 @@ const ChatScreen = () => {
     const navigation = useNavigation();
     const [messages, setMessages] = useState([]);
     const [socket, setSocket] = useState(null);
+    const { theme } = useContext(ThemeContext);
    
    console.log("username", username);
     useEffect(() => {
@@ -147,7 +149,7 @@ const ChatScreen = () => {
         screenIndex={3} 
         renderContent={() => (
         <SafeAreaProvider>
-            <View style={styles.container}>
+            <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
                 <View style={[styles.headerContainer, { flexDirection: "row" }]}> 
                      
                 <View style={styles.container}>
