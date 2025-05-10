@@ -277,6 +277,7 @@ const style = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // booking history screen
   bookRecordsContainer: {
     alignSelf: "stretch",
     marginVertical: 5,
@@ -299,7 +300,28 @@ const style = StyleSheet.create({
   bookRecordDetails: {
     marginTop: 8,
   },
+  update_button: {
+    backgroundColor: '#00C297',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  delete_button: {
+    backgroundColor: 'red',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  update_delete_buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 
+  // Chatbox button
   chatButton: {
     color: '#15b5b0',
     fontSize: 45,
@@ -327,6 +349,47 @@ const style = StyleSheet.create({
     padding: 15,
     borderTopWidth: 1,
     borderTopColor: 'grey',
+  },
+  card: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 16,
+    marginVertical: 8,
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3, // For Android shadow
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+    alignSelf:"center"
+  },
+  cardDescription: {
+    fontSize: 14,
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  bookNowButton: {
+    paddingVertical: 12,
+    marginBottom: 16,
+    alignSelf: "center", // Center horizontally
+    width: 100, // Fixed width
+    height: 50, // Fixed height
+    backgroundColor: "#FF8F00", // Button color
+    borderRadius: 8, // Rounded corners
+    justifyContent: "center", // Center text vertically
+    alignItems: "center", // Center text horizontally
+  },
+  bookNowButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 })
 export default style;

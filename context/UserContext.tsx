@@ -32,9 +32,9 @@ export const validateUserData = (userData: UserData): ValidationErrors => {
     newErrors.name = "Name can only contain letters and spaces";
   }
 
-  if (!userData.email || !userData.email.includes('@')) {
+  if (!userData.email) {
     newErrors.email = "Email address is required";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email) || !userData.email.includes('@')) {
     newErrors.email = "Email format is invalid";
   }
 
@@ -92,10 +92,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-  export const useUser = () => {
-    const context = useContext(UserContext);
-    if (context === undefined) {
-      throw new Error('useUser must be used within a UserProvider');
-    }
-    return context;
-  };
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
+};
