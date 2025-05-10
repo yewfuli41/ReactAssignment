@@ -3,7 +3,7 @@ import { View, ImageBackground, Image, TouchableNativeFeedback, Text, Alert, Tex
 import { styles } from "./StylesCollection";
 import Login from "./Login";
 import CreateAccount from "./CreateAccount";
-import onGoogleButtonPress from './GoogleLogin';
+
 let SQLite = require('react-native-sqlite-storage');
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -76,9 +76,7 @@ const WelcomeLogin = () => {
                 {/* 2 view */}
             <CreateAccount visible={isCreateAccountVisible} close={() => setCreateAccountVisible(false)} />
 
-            <TouchableNativeFeedback onPress={() => OnGoogleButtonPress()}>
-                <AntDesign name="google" size={50} style={styles.googleLogin} />
-            </TouchableNativeFeedback>
+          
 
             {/* Phone Number Modal */}
             {phoneModalVisible && (
