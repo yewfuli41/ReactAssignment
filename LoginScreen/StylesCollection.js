@@ -136,10 +136,5 @@ export const styles = StyleSheet.create({
         color: 'black',
         marginTop: 10,
         padding:20,
-    },
-    googleLogin:{
-        justifyContent:'center',
-        marginLeft: screenWidth*0.45,
-        color:'#DB4437',
     }
 });

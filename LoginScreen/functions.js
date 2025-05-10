@@ -112,10 +112,13 @@ export const authentication = async(email, password) => {
     }
     
     // mobile
-    mobile = mobile.trim(); // trim first
+
     if (!mobile) {
       errors.mobile = "Phone number is required";
-    }else if(!mobilePattern.test(mobile)) {
+
+    }
+
+    if(!mobilePattern.test(mobile)) {
       errors.mobile = "Invalid phone number (9-14 digits exclude -)";
     }
   
