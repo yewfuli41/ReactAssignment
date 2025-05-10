@@ -7,7 +7,6 @@
   import { RadioButton } from "react-native-paper";
   import Ionicons from 'react-native-vector-icons/Ionicons';
   import { DrawerActions } from '@react-navigation/native';
-  import AsyncStorage from '@react-native-async-storage/async-storage';
   import { ThemeContext } from '../context/ThemeContext';
   import { paymentMethods } from './paymentMethods';
   import { useUser } from "../context/UserContext";
@@ -16,11 +15,13 @@
   const App = ({ route, navigation }: Props) => {
     const [paymentMethod, setPaymentMethod] = useState<string>("");
     const { serviceName, dentistName, appointmentDate, timeSlot, calculateTotal } = route.params;
-    const user = { name: "John Doe", phone: "011-1213141" }
+
     const totalAmount = calculateTotal ? calculateTotal(serviceName) : 0;
     const {theme} = useContext(ThemeContext);
     const { userData } = useUser(); // Get the logged-in user's details
     const userName = userData?.name; // Use the user's name
+    const userPhone = userData?.phoneNumber; // Use the user's phone number
+    const user = { name: userName, phone: userPhone }
     const _save = () => {
       let url = 'http://10.0.2.2:5000/api/bookings'
       fetch(url, {
