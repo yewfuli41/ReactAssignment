@@ -1,79 +1,84 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Dental Booking Application Project
+This is a team project for our coursework assignment and for academic purpose, developed and built using the React Native framework, in the end we produced an Android platform based application that allows user to 
+1. Login or register their account.
+2. Edit their account information.
+3. Customizable light/dark theme of most of the application.
+4. Get necessary information about the services, addresses about the dental clinic.
+5. Book for appointment with the clinic
+6. Check, cancel and update upcoming appointment.
+7. live chat with the clinic staff.
 
-# Getting Started
+## Project Outcome: 
+* Learned how to implement UI components.
+* Ability to implement wireless communications on our backend communication system, application is able to synchronize booking data made by users, making our application more responsive.
+* Implemented and automated the process of booking an appointments.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## My contribution:
+Implemented the front and back end of the booking system and appointment record display system.
 
-## Step 1: Start the Metro Server
+## Database API server
+This project repository also contains a python file which is scripted to run the database API server, which for educational and budget purpose, will be hosted locally.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## Screenshots:
+![DentalBookingAppPreviewScreen](docImage/DentalBookingAppPreviewScreen.png "PreviewScreen")
 
-To start Metro, run the following command from the _root_ of your React Native project:
+The first thing you will see after running the application.
 
-```bash
-# using npm
-npm start
+![LoginPage](docImage/LoginPage.png "Login Page")
 
-# OR using Yarn
-yarn start
-```
+Allows user to login to their account which saves their previous customization and appointment records.
 
-## Step 2: Start your Application
+![LoginSuccess](docImage/LoginSuccess.png "Login Success")
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+![RegisterPage](docImage/RegisterPage.png "Register Page")
 
-### For Android
+Allows user to create new account, which will be saved to the local database inside the mobile phnoe.
 
-```bash
-# using npm
-npm run android
+![HomePage](docImage/HomePage.jpg "HomeScreen")
 
-# OR using Yarn
-yarn android
-```
+Welcomes the user to the application, the user have two methods of navigating the screens, either by swiping or tapping on the bottom bar icons.
+Tapping on the burger icon on the top left will take the user to the User Profile screen, which will expose more menus and screen for the user to navigate through.
 
-### For iOS
+![ServiceScreenStep1](docImage/ServiceScreen.png "ServiceScreen")
 
-```bash
-# using npm
-npm run ios
+This is the first of the booking process, an registered user can pick their needed services in this page. 
+This and the following part of the application is contributed by me and another one of my team members.
 
-# OR using Yarn
-yarn ios
-```
+![ServiceScreenStep2](docImage/ServiceScreenStep1.png "Select A Doctor")
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+![ServiceScreenStep3](docImage/BookingScreenStep2.png "Choose Time Schedule")
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+There is simple API involved in this process called OpenHolidays API, I used REST architecture to implement the checking of whether the selected date is a holiday or not.
+I have faced the challenge of filtering through the large amount of data types send by the API server, which required me quite some time to tweak the request parameters to fit my use case.
 
-## Step 3: Modifying your App
+![ServiceScreenLastStep](docImage/BookingScreenLastStep.png "Payment Confirmation")
 
-Now that you have successfully run the app, let's modify it.
+This will be the last step of the booking process, there were originally plans to implement a type of payment API, but due to budget constraints, it is discarded and left as it is.
+After confirming the booking of the appointment, the app will send appointment data to database API server which will handle all the CRUD queries by the application.
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+![BookingHistory](docImage/BookingHistory.png "Shows Booking Record")
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+This page will load the appointment record by the current registered user, it will show both active and inactive appointments, inactive appointments cannot be changed except deleting it.
+Clicking on the modify button will take the uesr to the next following screen.
 
-## Congratulations! :tada:
+![RecordUpdateScreen](docImage/RecordUpdate.png "Edit upcoming appointment")
 
-You've successfully run and modified your React Native App. :partying_face:
+This part also includes the holiday checking, change of services will require user to select payment again.
+After it is done, the new updated booking data will be sent back to the database API server.
 
-### Now what?
+![UserProfileScreen](docImage/UserProfile.jpg "Shows user related info")
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+![UserProfileEditingScreen](docImage/EditProfile.jpg "Profile Editing")
 
-# Troubleshooting
+The modification on the user account will only make change on the local database on the device, this is also to test the implementation of local data persistency.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+![FAQScreen](docImage/FAQScreen.jpg "FAQ")
 
-# Learn More
+![HowtoGoScreenFirstPart](docImage/HowtoGoScreen1.jpg "Shows Contact Info")
+![HowtoGoScreenSecondPart](docImage/HowtoGoScreen2.jpg "Shows Route and Location")
 
-To learn more about React Native, take a look at the following resources:
+We have utilized Geolocation API and WebView to provide location-functionality, such as showing the user’s current location, displaying the directions to the clinic, and opening the clinic’s location in a map application. 
+The Geolocation API is used to get the user’s current location (latitude and longitude). 
+It also ensures accurate directions by using real-time location data. 
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
